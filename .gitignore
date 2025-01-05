@@ -1,5 +1,5 @@
-*.elf
+app
+*.exe
 *.bin
-*.class
-*.o
-*.so
+*.dll
+*.log
