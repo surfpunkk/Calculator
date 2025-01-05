@@ -258,7 +258,30 @@ void on_equal_button_clicked(GtkWidget *button, GtkEntry *entry) {
     result_shown = true;
     if (strlen(current_text) > 0) {
         std::string result = calculate(current_text);
-        gtk_entry_set_text(entry, result.c_str());
+
+        if (no_empty_state) {
+            gtk_entry_set_text(entry, result.c_str());
+        } else {
+            gchar result_str[64];
+            g_snprintf(result_str, sizeof(result_str), "%.15g", std::stod(result));
+
+            std::string formatted_result = result_str;
+
+            size_t dot_pos = formatted_result.find('.');
+            if (dot_pos != std::string::npos) {
+                size_t last_non_zero = formatted_result.find_last_not_of('0');
+
+                if (last_non_zero > dot_pos) {
+                    formatted_result.erase(last_non_zero + 1);
+                } else {
+                    formatted_result.erase(dot_pos);
+                }
+            }
+            gtk_entry_set_text(entry, formatted_result.c_str());
+        }
+    } else {
+        gtk_entry_set_text(entry, "No Empty");
+        no_empty_state = true;
     }
 }
 
