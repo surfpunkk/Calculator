@@ -59,7 +59,6 @@ void on_operator_clicked(GtkWidget *button, GtkEntry *entry){
     }
 }
 
-
 int getPrecedence(char op) {
     switch (op) {
         case '+': case '-': return 1;
@@ -73,23 +72,20 @@ bool isOperator(wchar_t c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%' || c == L'√';
 }
 
-std::string applyOperator(int a, int b, const std::string& op) {
+std::string applyOperator(double a, double b, const std::string& op) {
     if (op == "+") return std::to_string(a + b);
     if (op == "-") return std::to_string(a - b);
     if (op == "*") return std::to_string(a * b);
     if (op == "/") {
         if (b == 0) {
-        no_empty_state = true;        
-        return "Error: Division by 0"; 
+            no_empty_state = true;        
+            return "Error: Division by 0"; 
         } 
-    return std::to_string(a / b);
+        return std::to_string(a / b);
     }
     if (op == "^") return std::to_string(std::pow(a, b));
     if (op == "%") {
-        if (b == 0) {
-        return std::to_string(a / 100.0); 
-        }
-    return std::to_string(a * (b / 100.0)); 
+        return std::to_string(a * (b / 100.0)); 
     }
     if (op == "√") {
         if (b < 0) {
@@ -97,7 +93,7 @@ std::string applyOperator(int a, int b, const std::string& op) {
         }
         return std::to_string(std::sqrt(b));
     }
-    return "No empty"; 
+    return "Error: Unknown operator"; 
 }
 
 std::vector<std::string> tokenize(const std::string& expression) {
@@ -113,7 +109,7 @@ std::vector<std::string> tokenize(const std::string& expression) {
             continue;
         }
 
-        if (std::isdigit(c) || c == '.') {
+        if (std::isdigit(c) || (c == '.' && !currentToken.empty() && currentToken.find('.') == std::string::npos)) {
             currentToken += c;
             expectOperator = true;  
         } else if (c == '-') {
@@ -127,11 +123,12 @@ std::vector<std::string> tokenize(const std::string& expression) {
                 tokens.push_back(std::string(1, c));
                 expectOperator = false;
             }
-        } else if ((c == 'e' || c == 'E') && expectOperator && !inExponent) {
+        } else if ((c == 'e' || c == 'E') && !currentToken.empty() && !inExponent && std::isdigit(currentToken.back())) {
             currentToken += c;
             inExponent = true;
         } else if ((c == '+' || c == '-') && inExponent && (currentToken.back() == 'e' || currentToken.back() == 'E')) {
             currentToken += c;
+            inExponent = false;
         } else if (isOperator(c)) {
             if (!currentToken.empty()) {
                 tokens.push_back(currentToken);
@@ -165,7 +162,7 @@ std::vector<std::string> infixToRPN(const std::vector<std::string>& tokens) {
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1)) {  
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find('.') != std::string::npos) {
             output.push_back(token);
         } else if (isOperator(token[0])) {
             while (!operators.empty() && getPrecedence(operators.top()[0]) >= getPrecedence(token[0])) {
@@ -182,7 +179,7 @@ std::vector<std::string> infixToRPN(const std::vector<std::string>& tokens) {
             }
             if (operators.empty() || operators.top() != "(") {
                 no_empty_state = true;
-                return {"No empty"}; 
+                return {"Error: Mismatched parentheses"}; 
             }
             operators.pop();
         } else {
@@ -193,7 +190,7 @@ std::vector<std::string> infixToRPN(const std::vector<std::string>& tokens) {
     while (!operators.empty()) {
         if (operators.top() == "(") {
             no_empty_state = true;
-            return {"No empty"}; 
+            return {"Error: Mismatched parentheses"}; 
         }
         output.push_back(operators.top());
         operators.pop();
@@ -206,19 +203,27 @@ std::string evaluateRPN(const std::vector<std::string>& rpn) {
     std::stack<double> values;
     for (const auto& token : rpn) {
         if (isOperator(token[0]) && token.size() == 1) {
-            if (token[0] == L'√') { 
+            if (token[0] == L'√') {
+                if (values.empty()) {
+                    no_empty_state = true;
+                    return "Error: Missing operand for √";
+                }
                 double operand = values.top(); values.pop();
+                if (operand < 0) {
+                    no_empty_state = true;
+                    return "Error: Negative root";
+                }
                 values.push(std::sqrt(operand));
             } else {
                 if (values.size() < 2) {
                     no_empty_state = true;
-                    return "No empty";
+                    return "Error: Missing operands";
                 }
                 double b = values.top(); values.pop();
                 double a = values.top(); values.pop();
 
                 std::string result = applyOperator(a, b, token);
-                if (no_empty_state) {
+                if (result.find("Error") != std::string::npos) {
                     return result;
                 }
 
@@ -229,13 +234,13 @@ std::string evaluateRPN(const std::vector<std::string>& rpn) {
                 values.push(std::stod(token));
             } catch (...) {
                 no_empty_state = true;
-                return "Error: Unknown element";
+                return "Error: Invalid number format";
             }
         }
     }
     if (values.size() != 1) {
         no_empty_state = true;
-        return "Error: Incorrect";
+        return "Error: Incorrect expression";
     }
 
     return std::to_string(values.top());
@@ -245,11 +250,17 @@ std::string calculate(const std::string& expression) {
     no_empty_state = false;  
     try {
         auto tokens = tokenize(expression);
+        if (tokens.empty() || tokens[0] == "Error: Incorrect") {
+            return "Error: Invalid input";
+        }
         auto rpn = infixToRPN(tokens);
+        if (rpn.empty() || rpn[0] == "Error: Incorrect") {
+            return "Error: Invalid RPN conversion";
+        }
         return evaluateRPN(rpn);
     } catch (...) {
         no_empty_state = true;
-        return "Error: Incorrect";  
+        return "Error: Unexpected exception";  
     }
 }
 
@@ -271,7 +282,7 @@ void on_equal_button_clicked(GtkWidget *button, GtkEntry *entry) {
             if (dot_pos != std::string::npos) {
                 size_t last_non_zero = formatted_result.find_last_not_of('0');
 
-                if (last_non_zero > dot_pos) {
+                if (last_non_zero != std::string::npos && last_non_zero > dot_pos) {
                     formatted_result.erase(last_non_zero + 1);
                 } else {
                     formatted_result.erase(dot_pos);
@@ -280,7 +291,7 @@ void on_equal_button_clicked(GtkWidget *button, GtkEntry *entry) {
             gtk_entry_set_text(entry, formatted_result.c_str());
         }
     } else {
-        gtk_entry_set_text(entry, "No Empty");
+        gtk_entry_set_text(entry, "Error: Empty input");
         no_empty_state = true;
     }
 }
@@ -363,7 +374,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_fixed_put(GTK_FIXED(fixed), button_procent, 560, 500);
 
     GtkWidget *button_sqrt = gtk_button_new_with_label("√");
-    gtk_widget_set_size_request(button_sqrt , 110, 90);
+    gtk_widget_set_size_request(button_sqrt , 110, 95);
     g_signal_connect(button_sqrt, "clicked", G_CALLBACK(on_operator_clicked), entry);
     gtk_fixed_put(GTK_FIXED(fixed), button_sqrt, 680, 500);
 
