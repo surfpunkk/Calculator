@@ -93,7 +93,7 @@ std::string applyOperator(double a, double b, const std::string& op) {
         }
         return std::to_string(std::sqrt(b));
     }
-    return "Error: Unknown operator"; 
+    return "Error: No empty"; 
 }
 
 std::vector<std::string> tokenize(const std::string& expression) {
@@ -109,7 +109,7 @@ std::vector<std::string> tokenize(const std::string& expression) {
             continue;
         }
 
-        if (std::isdigit(c) || (c == '.' && !currentToken.empty() && currentToken.find('.') == std::string::npos)) {
+        if (std::isdigit(c) || (c == ',' && !currentToken.empty() && currentToken.find(',') == std::string::npos)) {
             currentToken += c;
             expectOperator = true;  
         } else if (c == '-') {
@@ -162,7 +162,7 @@ std::vector<std::string> infixToRPN(const std::vector<std::string>& tokens) {
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find('.') != std::string::npos) {
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(',') != std::string::npos) {
             output.push_back(token);
         } else if (isOperator(token[0])) {
             while (!operators.empty() && getPrecedence(operators.top()[0]) >= getPrecedence(token[0])) {
@@ -255,12 +255,12 @@ std::string calculate(const std::string& expression) {
         }
         auto rpn = infixToRPN(tokens);
         if (rpn.empty() || rpn[0] == "Error: Incorrect") {
-            return "Error: Invalid RPN conversion";
+            return "Error: Incorrect";
         }
         return evaluateRPN(rpn);
     } catch (...) {
         no_empty_state = true;
-        return "Error: Unexpected exception";  
+        return "Error: Incorrect";  
     }
 }
 
@@ -291,7 +291,7 @@ void on_equal_button_clicked(GtkWidget *button, GtkEntry *entry) {
             gtk_entry_set_text(entry, formatted_result.c_str());
         }
     } else {
-        gtk_entry_set_text(entry, "Error: Empty input");
+        gtk_entry_set_text(entry, "Error: No empty");
         no_empty_state = true;
     }
 }
@@ -353,7 +353,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     g_signal_connect(button_clear, "clicked", G_CALLBACK(on_clear_button_clicked), entry);
     gtk_fixed_put(GTK_FIXED(fixed), button_clear, 450, 280);
 
-    GtkWidget *button_point = gtk_button_new_with_label(".");
+    GtkWidget *button_point = gtk_button_new_with_label(",");
     gtk_widget_set_size_request(button_point, 100, 90);
     g_signal_connect(button_point, "clicked", G_CALLBACK(on_operator_clicked), entry);
     gtk_fixed_put(GTK_FIXED(fixed), button_point, 450, 500);
