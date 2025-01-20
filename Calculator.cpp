@@ -213,7 +213,6 @@ std::string evaluateRPN(const std::vector<std::string>& rpn) {
                     no_empty_state = true;
                     return "Error: Negative root";
                 }
-                values.push(std::sqrt(operand));
             } else {
                 if (values.size() < 2) {
                     no_empty_state = true;
