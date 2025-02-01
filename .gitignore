@@ -1,5 +1,3 @@
-app
+.idea
+cmake-build-debug
 *.exe
-*.bin
-*.dll
-*.log
