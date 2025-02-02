@@ -53,7 +53,7 @@ void Calculator::setup_ui() {
         "7", "8", "9", "/",
         "4", "5", "6", "*",
         "1", "2", "3", "-",
-        "0", ".", "=", "+"
+        "0", ",", "=", "+"
     };
     for (int i = 0; i < 20; ++i) {
         GtkWidget *button = gtk_button_new_with_label(buttons[i]);

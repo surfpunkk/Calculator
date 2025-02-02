@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <vector>
 
+inline bool result_shown = false;
+inline bool no_empty_state = false;
+
 class CalculatorCore {
 public:
     static int getPrecedence(char op);

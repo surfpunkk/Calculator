@@ -3,9 +3,6 @@
 #include <cmath>
 #include <vector>
 
-bool no_empty_state = false;
-
-
 int CalculatorCore::getPrecedence(char op) {
     switch (op) {
         case '+': case '-': return 1;
@@ -67,7 +64,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                     tokens.push_back(currentToken);
                     currentToken.clear();
                 }
-                tokens.push_back(std::string(1, c));
+                tokens.emplace_back(1, c);
                 expectOperator = false;
             }
         } else if ((c == 'e' || c == 'E') && !currentToken.empty() && !inExponent && std::isdigit(currentToken.back())) {
@@ -81,7 +78,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.push_back(currentToken);
                 currentToken.clear();
             }
-            tokens.push_back(std::string(1, c));
+            tokens.emplace_back(1, c);
             expectOperator = (c != L'√');
             inExponent = false;
         } else if (c == '(' || c == ')') {
@@ -89,7 +86,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.push_back(currentToken);
                 currentToken.clear();
             }
-            tokens.push_back(std::string(1, c));
+            tokens.emplace_back(1, c);
             expectOperator = (c == ')');
         } else {
             no_empty_state = true;
