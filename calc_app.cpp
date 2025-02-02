@@ -73,6 +73,7 @@ int Calculator::run(int argc, char *argv[]) {
 void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
     const char *label = gtk_button_get_label(GTK_BUTTON(widget));
     GtkWidget *entry = GTK_WIDGET(data);
+        result_shown = false;
 
     EventHandlers::handle_input(entry, label);
 }
