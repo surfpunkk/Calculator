@@ -46,8 +46,8 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
     bool expectOperator = false;
     bool inExponent = false;
 
-    for (size_t i = 0; i < expression.size(); ++i) {
-        wchar_t c = static_cast<unsigned char>(expression[i]);
+    for (const char i : expression) {
+        wchar_t c = static_cast<unsigned char>(i);
 
         if (std::isspace(c)) {
             continue;
