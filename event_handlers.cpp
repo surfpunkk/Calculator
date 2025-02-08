@@ -6,6 +6,7 @@
             expression.clear();
             gtk_entry_set_text(GTK_ENTRY(entry), "");
         } else if (g_strcmp0(input, "=") == 0) {
+            expression.clear();
             if (const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry)); current_text[0] != '\0') {
                 const std::string result = CalculatorCore::calculate(current_text);
                 gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
@@ -26,15 +27,29 @@
                     }
                     gtk_entry_set_text(GTK_ENTRY(entry), formatted_result.c_str());
                     result_shown = true;
-                    expression.clear();
                 }
             } else {
                 gtk_entry_set_text(GTK_ENTRY(entry), "No Empty");
                 no_empty_state = true;
             }
         } else {
-            expression += input;
-            gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            if (result_shown == 1 && (g_strcmp0(input, "1") == 0 || g_strcmp0(input, "2") == 0 ||
+                g_strcmp0(input, "3") == 0 || g_strcmp0(input, "4") == 0 || g_strcmp0(input, "5") == 0 ||
+                g_strcmp0(input, "6") == 0 || g_strcmp0(input, "7") == 0 || g_strcmp0(input, "8") == 0 ||
+                g_strcmp0(input, "9") == 0 || g_strcmp0(input, "0") == 0)) {
+                expression.clear();
+                result_shown = false;
+                expression += input;
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            } else if (no_empty_state) {
+                expression.clear();
+                expression += input;
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                no_empty_state = false;
+            } else {
+                expression += input;
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            }
         }
     }
 
