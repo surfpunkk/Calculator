@@ -33,8 +33,16 @@ std::string EventHandlers::expression;
                 gtk_entry_set_text(GTK_ENTRY(entry), "No Empty");
                 no_empty_state = true;
             }
-        } else if (g_strcmp0(input, "←") == 0) {
-
+        } else if (g_strcmp0(input, "⌫") == 0) {
+            if (no_empty_state) {
+                expression.clear();
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                no_empty_state = false;
+            }
+            else if (!expression.empty()) {
+                expression.pop_back();
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            }
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {
@@ -42,7 +50,7 @@ std::string EventHandlers::expression;
                     result_shown = false;
                     expression += input;
                     gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-                } else if (strchr("+-*/%^√", input[0])) {
+                } else {
                     result_shown = false;
                     expression += input;
                     gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
