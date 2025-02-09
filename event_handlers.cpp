@@ -42,6 +42,7 @@ std::string EventHandlers::expression;
             else if (!expression.empty()) {
                 expression.pop_back();
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                result_shown = false;
             }
         } else {
             if (result_shown){
