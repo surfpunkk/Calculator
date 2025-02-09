@@ -7,6 +7,8 @@
 class EventHandlers {
 public:
     static void handle_input(GtkWidget *entry, const char *input);
+private:
+    static std::string expression;
 };
 
 #endif //EVENT_HANDLERS_H
