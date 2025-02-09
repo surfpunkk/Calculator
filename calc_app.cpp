@@ -31,7 +31,7 @@ void Calculator::setup_ui() {
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "Калькулятор");
-    gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
+    gtk_window_set_default_size(GTK_WINDOW(window), 300, 400);
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
     gtk_window_set_deletable(GTK_WINDOW(window), TRUE);
     gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
@@ -44,21 +44,21 @@ void Calculator::setup_ui() {
 
     entry = gtk_entry_new();
     gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
-    gtk_widget_set_size_request(entry, 280, 300);
+    gtk_widget_set_size_request(entry, 400, 200);
     gtk_widget_set_name(entry, "entry-field");
-    gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 4, 1);
+    gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 5, 1);
 
     const char *buttons[] = {
-        "%", "√", "^", "C",
-        "7", "8", "9", "/",
-        "4", "5", "6", "*",
-        "1", "2", "3", "-",
-        "0", ",", "=", "+"
+        "%", "√", "^", "C", "←",
+        "7", "8", "9", "/", "(",
+        "4", "5", "6", "*", ")",
+        "1", "2", "3", "-", "log",
+        "0", ",", "=", "+", "Pi"
     };
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 25; ++i) {
         GtkWidget *button = gtk_button_new_with_label(buttons[i]);
         gtk_widget_set_size_request(button, 50, 50);
-        gtk_grid_attach(GTK_GRID(grid), button, i % 4, i / 4 + 1, 1, 1);
+        gtk_grid_attach(GTK_GRID(grid), button, i % 5, i / 5 + 1, 1, 1);
         g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), entry);
     }
     gtk_widget_show_all(window);

@@ -33,6 +33,8 @@ std::string EventHandlers::expression;
                 gtk_entry_set_text(GTK_ENTRY(entry), "No Empty");
                 no_empty_state = true;
             }
+        } else if (g_strcmp0(input, "←") == 0) {
+
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {
