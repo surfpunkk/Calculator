@@ -6,8 +6,8 @@
 int CalculatorCore::getPrecedence(char op) {
     switch (op) {
         case '+': case '-': return 1;
-        case '*': case '/': return 2;
-        case '^':           return 3;
+        case '*': case '/': case '%': return 2;
+        case '^': case '√': return 3;
         default:            return 0;
     }
 }
@@ -87,7 +87,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 currentToken.clear();
             }
             tokens.emplace_back(1, c);
-            expectOperator = (c == ')');
+            expectOperator = c == ')';
         } else {
             no_empty_state = true;
             return {"Error: Incorrect"};
