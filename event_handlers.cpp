@@ -12,6 +12,7 @@ std::string EventHandlers::expression;
                 const std::string result = CalculatorCore::calculate(current_text);
                 if (no_empty_state) {
                     gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
+                    no_empty_state = false;
                 } else {
                     gchar result_str[64];
                     g_snprintf(result_str, sizeof(result_str), "%.15g", std::stod(result));

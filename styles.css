@@ -1,0 +1,22 @@
+#button_equal:hover {
+    background-color: #2dac0f;
+    color: black;
+}
+#button_equal:active {
+    background-color: #186e00;
+    color: black;
+}
+#button_del:hover {
+    background-color: #DC143C;
+    font-family: "JetBrains Mono", sans-serif;
+    color: black;
+}
+#button_del:active {
+    background-color: #7a0217;
+    font-family: "JetBrains Mono", sans-serif;
+    color: black;
+}
+
+button {
+    font-size: 15px;
+}
