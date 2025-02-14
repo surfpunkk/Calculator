@@ -8,15 +8,17 @@
 }
 #button_del:hover {
     background-color: #DC143C;
-    font-family: "JetBrains Mono", sans-serif;
     color: black;
 }
 #button_del:active {
     background-color: #7a0217;
-    font-family: "JetBrains Mono", sans-serif;
     color: black;
 }
 
 button {
+    font-size: 15px;
+}
+
+#entry-field {
     font-size: 15px;
 }

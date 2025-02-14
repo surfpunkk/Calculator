@@ -43,7 +43,7 @@ void Calculator::setup_ui() {
     gtk_container_add(GTK_CONTAINER(window), grid);
 
     entry = gtk_entry_new();
-    gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
+    gtk_editable_set_editable(GTK_EDITABLE(entry), TRUE);
     gtk_widget_set_size_request(entry, 400, 200);
     gtk_widget_set_name(entry, "entry-field");
     gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 5, 1);

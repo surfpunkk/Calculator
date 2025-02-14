@@ -27,7 +27,10 @@ std::string EventHandlers::expression;
                         }
                     }
                     expression += formatted_result;
-                    gtk_entry_set_text(GTK_ENTRY(entry), formatted_result.c_str());
+                    if (expression == "inf") {
+                        expression = "∞";
+                    }
+                    gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                     result_shown = true;
                 }
             } else {

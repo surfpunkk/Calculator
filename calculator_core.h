@@ -10,8 +10,8 @@ inline bool no_empty_state = false;
 
 class CalculatorCore {
 public:
-    static int getPrecedence(char op);
-    static bool isOperator(wchar_t c);
+    static int getPrecedence(const std::string &op);
+    static bool isOperator(const std::string &c);
     static std::string applyOperator(double a, double b, const std::string& op);
     static std::vector<std::string> tokenize(const std::string& expression);
     static std::vector<std::string> infixToRPN(const std::vector<std::string>& tokens);

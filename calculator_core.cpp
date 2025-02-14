@@ -3,20 +3,18 @@
 #include <cmath>
 #include <vector>
 
-int CalculatorCore::getPrecedence(char op) {
-    switch (op) {
-        case '+': case '-': return 1;
-        case '*': case '/': case '%': return 2;
-        case '^': case '√': return 3;
-        default:            return 0;
-    }
+int CalculatorCore::getPrecedence(const std::string &op) {
+    if (op == "+" || op == "-") return 1;
+    if (op == "*" || op == "/" || op == "%") return 2;
+    if (op == "^" || op == "√") return 3;
+    return 0;
 }
 
-bool CalculatorCore::isOperator(wchar_t c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%' || c == L'√';
+bool CalculatorCore::isOperator(const std::string &c) {
+    return c == "+" || c == "-" || c == "*" || c == "/" || c == "^" || c == "%" || c == "√";
 }
 
-std::string CalculatorCore::applyOperator(double a, double b, const std::string& op) {
+std::string CalculatorCore::applyOperator(const double a, const double b, const std::string& op) {
     if (op == "+") return std::to_string(a + b);
     if (op == "-") return std::to_string(a - b);
     if (op == "*") return std::to_string(a * b);
@@ -46,17 +44,17 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
     bool expectOperator = false;
     bool inExponent = false;
 
-    for (const char i : expression) {
-        wchar_t c = static_cast<unsigned char>(i);
+    for (const char ch : expression) {
+        std::string c(1, ch);
 
-        if (std::isspace(c)) {
+        if (std::isspace(c[0])) {
             continue;
         }
 
-        if (std::isdigit(c) || (c == ',' && !currentToken.empty() && currentToken.find(',') == std::string::npos)) {
+        if (std::isdigit(c[0]) || (c == "," && !currentToken.empty() && currentToken.find(',') == std::string::npos)) {
             currentToken += c;
             expectOperator = true;
-        } else if (c == '-') {
+        } else if (c == "-") {
             if (!expectOperator || (tokens.empty() && currentToken.empty())) {
                 currentToken += c;
             } else {
@@ -64,13 +62,13 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                     tokens.push_back(currentToken);
                     currentToken.clear();
                 }
-                tokens.emplace_back(1, c);
+                tokens.emplace_back(c);
                 expectOperator = false;
             }
-        } else if ((c == 'e' || c == 'E') && !currentToken.empty() && !inExponent && std::isdigit(currentToken.back())) {
+        } else if ((c == "e" || c == "E") && !currentToken.empty() && !inExponent && std::isdigit(currentToken.back())) {
             currentToken += c;
             inExponent = true;
-        } else if ((c == '+' || c == '-') && inExponent && (currentToken.back() == 'e' || currentToken.back() == 'E')) {
+        } else if ((c == "+" || c == "-") && inExponent && (currentToken.back() == 'e' || currentToken.back() == 'E')) {
             currentToken += c;
             inExponent = false;
         } else if (isOperator(c)) {
@@ -78,16 +76,16 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.push_back(currentToken);
                 currentToken.clear();
             }
-            tokens.emplace_back(1, c);
-            expectOperator = (c != L'√');
+            tokens.emplace_back(c);
+            expectOperator = (c != "√");
             inExponent = false;
-        } else if (c == '(' || c == ')') {
+        } else if (c == "(" || c == ")") {
             if (!currentToken.empty()) {
                 tokens.push_back(currentToken);
                 currentToken.clear();
             }
-            tokens.emplace_back(1, c);
-            expectOperator = c == ')';
+            tokens.emplace_back(c);
+            expectOperator = c == ")";
         } else {
             no_empty_state = true;
             return {"Error: Incorrect"};
@@ -106,10 +104,10 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(',') != std::string::npos) {
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(",") != std::string::npos) {
             output.push_back(token);
-        } else if (isOperator(token[0])) {
-            while (!operators.empty() && getPrecedence(operators.top()[0]) >= getPrecedence(token[0])) {
+        } else if (isOperator(token)) {
+            while (!operators.empty() && getPrecedence(operators.top()) >= getPrecedence(token)) {
                 output.push_back(operators.top());
                 operators.pop();
             }
@@ -146,8 +144,8 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
 std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
     std::stack<double> values;
     for (const auto& token : rpn) {
-        if (isOperator(token[0]) && token.size() == 1) {
-            if (token[0] == L'√') {
+        if (isOperator(token) && token.size() == 1) {
+            if (token == "√") {
                 if (values.empty()) {
                     no_empty_state = true;
                     return "Error: Missing operand for √";
@@ -162,8 +160,8 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                     no_empty_state = true;
                     return "Error: Missing operands";
                 }
-                double b = values.top(); values.pop();
-                double a = values.top(); values.pop();
+                const double b = values.top(); values.pop();
+                const double a = values.top(); values.pop();
 
                 std::string result = applyOperator(a, b, token);
                 if (result.find("Error") != std::string::npos) {
