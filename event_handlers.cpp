@@ -17,19 +17,16 @@ std::string EventHandlers::expression;
                     gchar result_str[64];
                     g_snprintf(result_str, sizeof(result_str), "%.15g", std::stod(result));
                     std::string formatted_result = result_str;
-                    size_t dot_pos = formatted_result.find(',');
-                    if (dot_pos != std::string::npos) {
-                        size_t last_non_zero = formatted_result.find_last_not_of('0');
-                        if (last_non_zero > dot_pos) {
+                    if (const size_t dot_pos = formatted_result.find(','); dot_pos != std::string::npos) {
+                        if (const size_t last_non_zero = formatted_result.find_last_not_of('0'); last_non_zero > dot_pos) {
                             formatted_result.erase(last_non_zero + 1);
                         } else {
                             formatted_result.erase(dot_pos);
                         }
                     }
                     expression += formatted_result;
-                    if (expression == "inf") {
-                        expression = "∞";
-                    }
+                    if (expression == "inf") expression = "∞";
+                    if (expression == "-inf") expression = "-∞";
                     gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                     result_shown = true;
                 }
@@ -42,8 +39,7 @@ std::string EventHandlers::expression;
                 expression.clear();
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
-            }
-            else if (!expression.empty()) {
+            } else if (!expression.empty()) {
                 expression.pop_back();
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = false;
