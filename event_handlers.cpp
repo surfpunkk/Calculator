@@ -1,4 +1,5 @@
 #include "event_handlers.h"
+#include <unicode/unistr.h>
 
 std::string EventHandlers::expression;
 
@@ -40,10 +41,14 @@ std::string EventHandlers::expression;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else if (!expression.empty()) {
-                expression.pop_back();
+                icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
+                ustr.truncate(ustr.length() - 1);
+                std::string newExpression;
+                ustr.toUTF8String(newExpression);
+                expression = newExpression;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-                result_shown = false;
             }
+                result_shown = false;
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {
