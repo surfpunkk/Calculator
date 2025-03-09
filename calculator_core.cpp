@@ -29,12 +29,6 @@ std::string CalculatorCore::applyOperator(const double a, const double b, const 
     if (op == "%") {
         return std::to_string(a * (b / 100.0));
     }
-    if (op == "√") {
-        if (b < 0) {
-            return "Error: Negative root";
-        }
-        return std::to_string(std::sqrt(b));
-    }
     return "Error: No empty";
 }
 
@@ -104,7 +98,7 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(",") != std::string::npos) {
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(',') != std::string::npos) {
             output.push_back(token);
         } else if (isOperator(token)) {
             while (!operators.empty() && getPrecedence(operators.top()) >= getPrecedence(token)) {
@@ -155,6 +149,7 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                     no_empty_state = true;
                     return "Error: Negative root";
                 }
+                values.push(std::sqrt(operand));
             } else {
                 if (values.size() < 2) {
                     no_empty_state = true;

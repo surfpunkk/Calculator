@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include "calc_app.h"
 
 Calculator::Calculator() : window(nullptr), grid(nullptr), entry(nullptr) {}
@@ -17,11 +18,6 @@ void load_css() {
     const char *css_path = "../styles.css";
     GError *error = nullptr;
     gtk_css_provider_load_from_path(provider, css_path, &error);
-
-    if (error != nullptr) {
-        g_warning("Ошибка загрузки CSS: %s", error->message);
-        g_error_free(error);
-    }
 
     g_object_unref(provider);
 }
@@ -47,6 +43,8 @@ void Calculator::setup_ui() {
     gtk_widget_set_size_request(entry, 400, 200);
     gtk_widget_set_name(entry, "entry-field");
     gtk_grid_attach(GTK_GRID(grid), entry, 0, 0, 5, 1);
+
+    g_signal_connect(entry, "key-press-event", G_CALLBACK(on_key_press), nullptr);
 
     const char *buttons[] = {
         "(", ")", "^", "C", "⌫",
@@ -77,4 +75,12 @@ void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget *entry = GTK_WIDGET(data);
 
     EventHandlers::handle_input(entry, label);
+}
+
+gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event, gpointer user_data) {
+    if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
+        EventHandlers::handle_input(widget, "=");
+        return TRUE;
+    }
+    return FALSE;
 }
