@@ -7,20 +7,21 @@
 
 int CalculatorCore::getPrecedence(const std::string &op) {
     if (op == "+" || op == "-") return 1;
-    if (op == "×" || op == "÷" || op == "%") return 2;
+    if (op == "×" || op == "*" || op == "÷" || op == "/" || op == ":" || op == "%") return 2;
     if (op == "^" || op == "√") return 3;
     return 0;
 }
 
 bool CalculatorCore::isOperator(const std::string &c) {
-    return c == "+" || c == "-" || c == "×" || c == "÷" || c == "^" || c == "%" || c == "√";
+    return c == "+" || c == "-" || c == "×" || c == "*" || c == "÷" || c == "/" || c == ":"
+    || c == "^" || c == "%" || c == "√";
 }
 
 std::string CalculatorCore::applyOperator(const double a, const double b, const std::string& op) {
     if (op == "+") return std::to_string(a + b);
     if (op == "-") return std::to_string(a - b);
-    if (op == "×") return std::to_string(a * b);
-    if (op == "÷") {
+    if (op == "×" || op == "*") return std::to_string(a * b);
+    if (op == "÷" || op == "/" || op == ":") {
         if (b == 0) {
             no_empty_state = true;
             return "Error: Division by 0";
