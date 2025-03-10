@@ -1,5 +1,3 @@
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
 #include "calc_app.h"
 
 Calculator::Calculator() : window(nullptr), grid(nullptr), entry(nullptr) {}
@@ -47,11 +45,11 @@ void Calculator::setup_ui() {
     g_signal_connect(entry, "key-press-event", G_CALLBACK(on_key_press), nullptr);
 
     const char *buttons[] = {
-        "(", ")", "^", "C", "⌫",
+        "(", ")", "𝑥ⁿ", "C", "⌫",
         "7", "8", "9", "÷", "%",
         "4", "5", "6", "×", "√",
-        "1", "2", "3", "-", "X!",
-        "0", ",", "=", "+", "Pi"
+        "1", "2", "3", "-", "𝑥!",
+        "0", ",", "=", "+", "π"
     };
     for (int i = 0; i < 25; ++i) {
         GtkWidget *button = gtk_button_new_with_label(buttons[i]);

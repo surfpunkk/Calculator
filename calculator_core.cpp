@@ -1,9 +1,4 @@
 #include "calculator_core.h"
-#include <stack>
-#include <cmath>
-#include <vector>
-#include <unicode/unistr.h>
-#include <unicode/ustream.h>
 
 int CalculatorCore::getPrecedence(const std::string &op) {
     if (op == "+" || op == "-") return 1;
@@ -51,7 +46,8 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
             continue;
         }
 
-        if (std::isdigit(c) || (charStr == "," && !currentToken.empty() && currentToken.find(',') == std::string::npos)) {
+        if (std::isdigit(c) || (charStr == "," && !currentToken.empty() && currentToken.find(',')
+            == std::string::npos)) {
             currentToken += charStr;
             expectOperator = true;
         } else if (charStr == "-") {
@@ -65,10 +61,12 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.emplace_back(charStr);
                 expectOperator = false;
             }
-        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() && !inExponent && std::isdigit(currentToken.back())) {
+        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() && !inExponent &&
+            std::isdigit(currentToken.back())) {
             currentToken += charStr;
             inExponent = true;
-        } else if ((charStr == "+" || charStr == "-") && inExponent && (currentToken.back() == 'e' || currentToken.back() == 'E')) {
+        } else if ((charStr == "+" || charStr == "-") && inExponent && (currentToken.back() == 'e'
+            || currentToken.back() == 'E')) {
             currentToken += charStr;
             inExponent = false;
         } else if (isOperator(charStr)) {
@@ -104,7 +102,8 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(',') != std::string::npos) {
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) ||
+            token.find(',') != std::string::npos) {
             output.push_back(token);
         } else if (isOperator(token)) {
             while (!operators.empty() && getPrecedence(operators.top()) >= getPrecedence(token)) {

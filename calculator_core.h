@@ -4,6 +4,10 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <stack>
+#include <cmath>
+#include <vector>
+#include <unicode/unistr.h>
 
 inline bool result_shown = false;
 inline bool no_empty_state = false;

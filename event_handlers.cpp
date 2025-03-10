@@ -1,5 +1,4 @@
 #include "event_handlers.h"
-#include <unicode/unistr.h>
 
 std::string EventHandlers::expression;
 
@@ -32,7 +31,7 @@ std::string EventHandlers::expression;
                     result_shown = true;
                 }
             } else {
-                gtk_entry_set_text(GTK_ENTRY(entry), "No Empty");
+                gtk_entry_set_text(GTK_ENTRY(entry), "Error: No Empty");
                 no_empty_state = true;
             }
         } else if (g_strcmp0(input, "⌫") == 0) {
@@ -49,9 +48,14 @@ std::string EventHandlers::expression;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             }
             result_shown = false;
-        } else if (g_strcmp0(input, "X!") == 0) {
+        } else if (g_strcmp0(input, "𝑥!") == 0) {
                 expression+="!";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                result_shown = false;
+        } else if (g_strcmp0(input, "𝑥ⁿ") == 0) {
+                expression+="^";
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                result_shown = false;
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {

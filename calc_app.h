@@ -1,7 +1,6 @@
 #ifndef CALC_APP_H
 #define CALC_APP_H
 
-#include <gtk/gtk.h>
 #include "event_handlers.h"
 
 class Calculator {
