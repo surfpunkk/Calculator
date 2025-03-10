@@ -25,6 +25,10 @@ std::string CalculatorCore::applyOperator(const double a, const double b, const 
     }
     if (op == "^") return std::to_string(std::pow(a, b));
     if (op == "%") {
+        if (a < 0) {
+            no_empty_state = true;
+            return "Error: Procent couldn't be negative";
+        }
         return std::to_string(a * (b / 100.0));
     }
     return "Error: No result";
@@ -80,7 +84,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 currentToken.clear();
             }
             tokens.emplace_back(charStr);
-            expectOperator = (charStr != "√");
+            expectOperator = charStr != "√" && charStr != "!";
             inExponent = false;
         } else if (charStr == "(" || charStr == ")") {
             if (!currentToken.empty()) {
@@ -89,13 +93,6 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
             }
             tokens.emplace_back(charStr);
             expectOperator = charStr == ")";
-        } else if (charStr == "!") {
-                if (!expectOperator) {
-                    no_empty_state = true;
-                    return {"Error: Incorrect use of !"};
-                }
-                tokens.push_back(charStr);
-                expectOperator = true;
         } else {
             no_empty_state = true;
             return {"Error: Incorrect"};
