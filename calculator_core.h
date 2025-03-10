@@ -2,12 +2,13 @@
 #define CALCULATOR_CORE_H
 
 #include <string>
-#include <stdexcept>
 #include <vector>
 #include <stack>
 #include <cmath>
 #include <vector>
+#include <numbers>
 #include <unicode/unistr.h>
+#include <unicode/uchar.h>
 
 inline bool result_shown = false;
 inline bool no_empty_state = false;

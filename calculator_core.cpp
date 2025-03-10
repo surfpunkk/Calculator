@@ -27,22 +27,27 @@ std::string CalculatorCore::applyOperator(const double a, const double b, const 
     if (op == "%") {
         return std::to_string(a * (b / 100.0));
     }
-    return "Error: No empty";
+    return "Error: No result";
 }
 
 std::vector<std::string> CalculatorCore::tokenize(const std::string& expression) {
     std::vector<std::string> tokens;
-    icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
+    const icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
     std::string currentToken;
     bool expectOperator = false;
     bool inExponent = false;
 
     for (int32_t i = 0; i < ustr.length(); ++i) {
-        UChar32 c = ustr.char32At(i);
+        const UChar32 c = ustr.char32At(i);
         std::string charStr;
         icu::UnicodeString(c).toUTF8String(charStr);
 
         if (std::isspace(c)) {
+            continue;
+        }
+
+        if (u_isalpha(c)) {
+            currentToken += charStr;
             continue;
         }
 
@@ -84,6 +89,13 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
             }
             tokens.emplace_back(charStr);
             expectOperator = charStr == ")";
+        } else if (charStr == "!") {
+                if (!expectOperator) {
+                    no_empty_state = true;
+                    return {"Error: Incorrect use of !"};
+                }
+                tokens.push_back(charStr);
+                expectOperator = true;
         } else {
             no_empty_state = true;
             return {"Error: Incorrect"};
@@ -123,6 +135,8 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
                 return {"Error: Mismatched parentheses"};
             }
             operators.pop();
+        } else if (token == "π") {
+            output.push_back(std::to_string(std::numbers::pi));
         } else {
             no_empty_state = true;
             return {"Error: Unknown element"};
@@ -149,7 +163,7 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                     no_empty_state = true;
                     return "Error: Missing operand for √";
                 }
-                double operand = values.top(); values.pop();
+                const double operand = values.top(); values.pop();
                 if (operand < 0) {
                     no_empty_state = true;
                     return "Error: Negative root";
@@ -160,16 +174,16 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                     no_empty_state = true;
                     return "Error: Missing operand for !";
                 }
-                double operand = values.top(); values.pop();
+                const double operand = values.top(); values.pop();
                 if (operand < 0) {
                     no_empty_state = true;
                     return "Error: Factorial is not defined for negative numbers";
                 }
-                unsigned long long result = 1;
+                double result = 1;
                 for (int i = 1; i <= static_cast<int>(operand); ++i) {
                     result *= i;
                 }
-                values.push(static_cast<double>(result));
+                values.push(result);
             } else {
                 if (values.size() < 2) {
                     no_empty_state = true;
@@ -204,11 +218,11 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
 std::string CalculatorCore::calculate(const std::string& expression) {
     no_empty_state = false;
     try {
-        auto tokens = tokenize(expression);
+        const auto tokens = tokenize(expression);
         if (tokens.empty() || tokens[0] == "Error: Incorrect") {
             return "Error: Invalid input";
         }
-        auto rpn = infixToRPN(tokens);
+        const auto rpn = infixToRPN(tokens);
         if (rpn.empty() || rpn[0] == "Error: Incorrect") {
             return "Error: Incorrect";
         }

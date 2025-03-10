@@ -75,7 +75,7 @@ void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
     EventHandlers::handle_input(entry, label);
 }
 
-gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event, gpointer user_data) {
+gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
     if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
         EventHandlers::handle_input(widget, "=");
         gtk_editable_set_position(GTK_EDITABLE(widget), -1);

@@ -14,7 +14,7 @@ private:
     GtkWidget *entry;
     void setup_ui();
     static void on_button_clicked(GtkWidget *widget, gpointer data);
-    static gboolean on_key_press(GtkWidget *widget, const GdkEventKey *event, gpointer user_data);
+    static gboolean on_key_press(GtkWidget *widget, const GdkEventKey *event);
 };
 
 #endif //CALC_APP_H

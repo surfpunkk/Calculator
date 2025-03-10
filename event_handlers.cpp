@@ -31,7 +31,7 @@ std::string EventHandlers::expression;
                     result_shown = true;
                 }
             } else {
-                gtk_entry_set_text(GTK_ENTRY(entry), "Error: No Empty");
+                gtk_entry_set_text(GTK_ENTRY(entry), "Error: No result");
                 no_empty_state = true;
             }
         } else if (g_strcmp0(input, "⌫") == 0) {
