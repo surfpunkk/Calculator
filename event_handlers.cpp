@@ -6,7 +6,7 @@ std::string EventHandlers::expression;
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
         if (g_strcmp0(input, "C") == 0) {
             expression.clear();
-            gtk_entry_set_text(GTK_ENTRY(entry), "");
+            gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
         } else if (g_strcmp0(input, "=") == 0) {
             expression.clear();
             if (const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry)); current_text[0] != '\0') {
@@ -48,7 +48,10 @@ std::string EventHandlers::expression;
                 expression = newExpression;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             }
-                result_shown = false;
+            result_shown = false;
+        } else if (g_strcmp0(input, "X!") == 0) {
+                expression+="!";
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {

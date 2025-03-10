@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-pkg_check_modules(ICU REQUIRED icu-i18n icu-uc)
+pkg_check_modules(ICU REQUIRED icu-uc)
 add_executable(calculator main.cpp
         calc_app.h
         calc_app.cpp

@@ -8,13 +8,13 @@
 int CalculatorCore::getPrecedence(const std::string &op) {
     if (op == "+" || op == "-") return 1;
     if (op == "×" || op == "*" || op == "÷" || op == "/" || op == ":" || op == "%") return 2;
-    if (op == "^" || op == "√") return 3;
+    if (op == "^" || op == "√" || op == "!") return 3;
     return 0;
 }
 
 bool CalculatorCore::isOperator(const std::string &c) {
     return c == "+" || c == "-" || c == "×" || c == "*" || c == "÷" || c == "/" || c == ":"
-    || c == "^" || c == "%" || c == "√";
+    || c == "^" || c == "%" || c == "√" || c == "!";
 }
 
 std::string CalculatorCore::applyOperator(const double a, const double b, const std::string& op) {
@@ -144,7 +144,7 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
 std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
     std::stack<double> values;
     for (const auto& token : rpn) {
-        if (isOperator(token) && token.size() >= 1) {
+        if (isOperator(token) && !token.empty()) {
             if (token == "√") {
                 if (values.empty()) {
                     no_empty_state = true;
@@ -156,6 +156,21 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                     return "Error: Negative root";
                 }
                 values.push(std::sqrt(operand));
+            } else if (token == "!") {
+                if (values.empty()) {
+                    no_empty_state = true;
+                    return "Error: Missing operand for !";
+                }
+                double operand = values.top(); values.pop();
+                if (operand < 0) {
+                    no_empty_state = true;
+                    return "Error: Factorial is not defined for negative numbers";
+                }
+                unsigned long long result = 1;
+                for (int i = 1; i <= static_cast<int>(operand); ++i) {
+                    result *= i;
+                }
+                values.push(static_cast<double>(result));
             } else {
                 if (values.size() < 2) {
                     no_empty_state = true;
@@ -168,7 +183,6 @@ std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
                 if (result.find("Error") != std::string::npos) {
                     return result;
                 }
-
                 values.push(std::stod(result));
             }
         } else {
