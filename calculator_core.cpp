@@ -52,6 +52,7 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
 
         if (u_isalpha(c)) {
             currentToken += charStr;
+            expectOperator = true;
             continue;
         }
 
