@@ -7,9 +7,17 @@ int CalculatorCore::getPrecedence(const std::string &op) {
     return 0;
 }
 
-bool CalculatorCore::isOperator(const std::string &c) {
+bool CalculatorCore::isUnaryOperator(const std::string &c) {
+    return c == "√" || c == "!";
+}
+
+bool CalculatorCore::isBinaryOperator(const std::string &c) {
     return c == "+" || c == "-" || c == "×" || c == "*" || c == "÷" || c == "/" || c == ":"
-    || c == "^" || c == "%" || c == "√" || c == "!";
+    || c == "^" || c == "%";
+}
+
+bool CalculatorCore::isOperator(const std::string &c) {
+    return isUnaryOperator(c) || isBinaryOperator(c);
 }
 
 std::string CalculatorCore::applyOperator(const double a, const double b, const std::string& op) {
@@ -79,14 +87,31 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
             || currentToken.back() == 'E')) {
             currentToken += charStr;
             inExponent = false;
-        } else if (isOperator(charStr)) {
-            if (!currentToken.empty()) {
-                tokens.push_back(currentToken);
-                currentToken.clear();
-            }
-            tokens.emplace_back(charStr);
-            expectOperator = charStr != "√" && charStr != "!";
-            inExponent = false;
+        } else if (charStr == "√" && !expectOperator) {
+                if (!currentToken.empty()) {
+                    tokens.push_back(currentToken);
+                    currentToken.clear();
+                }
+                tokens.emplace_back(charStr);
+        } else if (charStr == "!") {
+                if (!expectOperator) {
+                    no_empty_state = true;
+                    return {"Error: Factorial must follow a number"};
+                }
+                if (!currentToken.empty()) {
+                    tokens.push_back(currentToken);
+                    currentToken.clear();
+                }
+                tokens.emplace_back(charStr);
+                expectOperator = true;
+        } else if (isBinaryOperator(charStr)) {
+                if (!currentToken.empty()) {
+                    tokens.push_back(currentToken);
+                    currentToken.clear();
+                }
+                tokens.emplace_back(charStr);
+                expectOperator = false;
+                inExponent = false;
         } else if (charStr == "(" || charStr == ")") {
             if (!currentToken.empty()) {
                 tokens.push_back(currentToken);
@@ -115,30 +140,37 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
         if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) ||
             token.find(',') != std::string::npos) {
             output.push_back(token);
-        } else if (isOperator(token)) {
-            while (!operators.empty() && getPrecedence(operators.top()) >= getPrecedence(token)) {
-                output.push_back(operators.top());
+            } else if (isUnaryOperator(token)) {
+                operators.push(token);
+            } else if (isBinaryOperator(token)) {
+                while (!operators.empty() && operators.top() != "(" &&
+                       getPrecedence(operators.top()) >= getPrecedence(token)) {
+                    output.push_back(operators.top());
+                    operators.pop();
+                       }
+                operators.push(token);
+            } else if (token == "(") {
+                operators.push(token);
+            } else if (token == ")") {
+                while (!operators.empty() && operators.top() != "(") {
+                    output.push_back(operators.top());
+                    operators.pop();
+                }
+                if (operators.empty() || operators.top() != "(") {
+                    no_empty_state = true;
+                    return {"Error: Mismatched parentheses"};
+                }
                 operators.pop();
-            }
-            operators.push(token);
-        } else if (token == "(") {
-            operators.push(token);
-        } else if (token == ")") {
-            while (!operators.empty() && operators.top() != "(") {
-                output.push_back(operators.top());
-                operators.pop();
-            }
-            if (operators.empty() || operators.top() != "(") {
+                if (!operators.empty() && isUnaryOperator(operators.top())) {
+                    output.push_back(operators.top());
+                    operators.pop();
+                }
+            } else if (token == "π") {
+                output.push_back(std::to_string(std::numbers::pi));
+            } else {
                 no_empty_state = true;
-                return {"Error: Mismatched parentheses"};
+                return {"Error: Unknown element"};
             }
-            operators.pop();
-        } else if (token == "π") {
-            output.push_back(std::to_string(std::numbers::pi));
-        } else {
-            no_empty_state = true;
-            return {"Error: Unknown element"};
-        }
     }
     while (!operators.empty()) {
         if (operators.top() == "(") {
@@ -155,47 +187,49 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
 std::string CalculatorCore::evaluateRPN(const std::vector<std::string>& rpn) {
     std::stack<double> values;
     for (const auto& token : rpn) {
-        if (isOperator(token) && !token.empty()) {
-            if (token == "√") {
-                if (values.empty()) {
-                    no_empty_state = true;
-                    return "Error: Missing operand for √";
-                }
-                const double operand = values.top(); values.pop();
-                if (operand < 0) {
-                    no_empty_state = true;
-                    return "Error: Negative root";
-                }
-                values.push(std::sqrt(operand));
-            } else if (token == "!") {
-                if (values.empty()) {
-                    no_empty_state = true;
-                    return "Error: Missing operand for !";
-                }
-                const double operand = values.top(); values.pop();
-                if (operand < 0) {
-                    no_empty_state = true;
-                    return "Error: Factorial is not defined for negative numbers";
-                }
-                double result = 1;
-                for (int i = 1; i <= static_cast<int>(operand); ++i) {
-                    result *= i;
-                }
-                values.push(result);
-            } else {
-                if (values.size() < 2) {
-                    no_empty_state = true;
-                    return "Error: Missing operands";
-                }
-                const double b = values.top(); values.pop();
-                const double a = values.top(); values.pop();
+if (isOperator(token) && !token.empty()) {
+    if (isUnaryOperator(token)) {
+        if (values.empty()) {
+            no_empty_state = true;
+            return "Error: Missing operand for " + token;
+        }
+        const double operand = values.top(); values.pop();
 
-                std::string result = applyOperator(a, b, token);
-                if (result.find("Error") != std::string::npos) {
-                    return result;
-                }
-                values.push(std::stod(result));
+        if (token == "√") {
+            if (operand < 0) {
+                no_empty_state = true;
+                return "Error: Negative root";
             }
+            values.push(std::sqrt(operand));
+        } else if (token == "!") {
+            if (operand < 0) {
+                no_empty_state = true;
+                return "Error: Factorial is not defined for negative numbers";
+            }
+            if (operand != std::floor(operand)) {
+                no_empty_state = true;
+                return "Error: Factorial requires integer";
+            }
+            double result = 1;
+            for (int i = 1; i <= static_cast<int>(operand); ++i) {
+                result *= i;
+            }
+            values.push(result);
+        }
+    } else {
+        if (values.size() < 2) {
+            no_empty_state = true;
+            return "Error: Missing operands for " + token;
+        }
+        const double b = values.top(); values.pop();
+        const double a = values.top(); values.pop();
+
+        std::string result = applyOperator(a, b, token);
+        if (result.find("Error") != std::string::npos) {
+            return result;
+        }
+        values.push(std::stod(result));
+    }
         } else {
             try {
                 values.push(std::stod(token));

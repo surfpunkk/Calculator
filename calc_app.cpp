@@ -56,6 +56,7 @@ void Calculator::setup_ui() {
         gtk_widget_set_size_request(button, 50, 50);
         if (buttons[i] == "=") gtk_widget_set_name(button, "button_equal");
         if (buttons [i] == "⌫") gtk_widget_set_name(button, "button_del");
+        if (buttons [i] == "𝑥ⁿ") gtk_widget_set_name(button, "xn");
         gtk_grid_attach(GTK_GRID(grid), button, i % 5, i / 5 + 1, 1, 1);
         g_signal_connect(button, "clicked", G_CALLBACK(on_button_clicked), entry);
     }

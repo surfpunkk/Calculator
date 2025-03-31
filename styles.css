@@ -14,7 +14,16 @@
     background-color: #7a0217;
     color: black;
 }
+#button_del{
+    font-size: 15px;
+    font-family: "", serif;
+}
+#xn{
+    font-size: 16px;
+    font-family: "", serif;
+}
 button {
+    font-family: "Liberation Mono", serif;
     font-size: 15px;
     border-radius: 5px;
     border: none;
@@ -25,6 +34,7 @@ button {
 }
 
 #entry-field {
+    font-family: "Liberation Mono", serif;
     font-size: 15px;
     padding: 10px;
     border-radius: 5px;
