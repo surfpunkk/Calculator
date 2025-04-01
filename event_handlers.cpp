@@ -4,11 +4,16 @@ std::string EventHandlers::expression;
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
         if (g_strcmp0(input, "C") == 0) {
+            no_empty_state = false;
+            result_shown = false;
             expression.clear();
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
         } else if (g_strcmp0(input, "=") == 0) {
             expression.clear();
             if (const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry)); current_text[0] != '\0') {
+                if (g_strrstr(current_text, "Error:") != nullptr) {
+                    return;
+                }
                 const std::string result = CalculatorCore::calculate(current_text);
                 if (no_empty_state) {
                     gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
@@ -79,5 +84,3 @@ std::string EventHandlers::expression;
             }
         }
     }
-
-
