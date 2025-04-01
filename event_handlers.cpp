@@ -1,8 +1,15 @@
 #include "event_handlers.h"
 
-std::string EventHandlers::expression;
+    std::string EventHandlers::expression;
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
+        const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
+        if (expression != current_text) {
+            expression = current_text;
+        }
+        if (g_strrstr(current_text, "Error:") != nullptr) {
+            no_empty_state = true;
+        }
         if (g_strcmp0(input, "C") == 0) {
             no_empty_state = false;
             result_shown = false;
@@ -10,8 +17,8 @@ std::string EventHandlers::expression;
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
         } else if (g_strcmp0(input, "=") == 0) {
             expression.clear();
-            if (const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry)); current_text[0] != '\0') {
-                if (g_strrstr(current_text, "Error:") != nullptr) {
+            if (current_text[0] != '\0') {
+                if (no_empty_state) {
                     return;
                 }
                 const std::string result = CalculatorCore::calculate(current_text);
@@ -54,19 +61,30 @@ std::string EventHandlers::expression;
             }
             result_shown = false;
         } else if (g_strcmp0(input, "𝑥!") == 0) {
+            if (no_empty_state) {
+                expression = "!";
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                no_empty_state = false;
+            } else {
                 expression+="!";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = false;
+            }
         } else if (g_strcmp0(input, "𝑥ⁿ") == 0) {
+            if (no_empty_state) {
+                expression = "^";
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                no_empty_state = false;
+            } else {
                 expression+="^";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = false;
+            }
         } else {
             if (result_shown){
                 if (isdigit(input[0])) {
-                    expression.clear();
                     result_shown = false;
-                    expression += input;
+                    expression = input;
                     gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 } else {
                     result_shown = false;
@@ -74,8 +92,7 @@ std::string EventHandlers::expression;
                     gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 }
             } else if (no_empty_state) {
-                expression.clear();
-                expression += input;
+                expression = input;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else {

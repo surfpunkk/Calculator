@@ -12,6 +12,7 @@ private:
     GtkWidget *window;
     GtkWidget *grid;
     GtkWidget *entry;
+    static void load_css();
     void setup_ui();
     static void on_button_clicked(GtkWidget *widget, gpointer data);
     static gboolean on_key_press(GtkWidget *widget, const GdkEventKey *event);

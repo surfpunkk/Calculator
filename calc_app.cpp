@@ -2,7 +2,7 @@
 
 Calculator::Calculator() : window(nullptr), grid(nullptr), entry(nullptr) {}
 
-void load_css() {
+void Calculator::load_css() {
     GtkCssProvider *provider = gtk_css_provider_new();
     GdkDisplay *display = gdk_display_get_default();
     GdkScreen *screen = gdk_display_get_default_screen(display);
@@ -79,6 +79,10 @@ void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
 gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
     if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
         EventHandlers::handle_input(widget, "=");
+        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
+        return TRUE;
+    } if (event->keyval == GDK_KEY_period || event->keyval == GDK_KEY_KP_Decimal) {
+        EventHandlers::handle_input(widget, ",");
         gtk_editable_set_position(GTK_EDITABLE(widget), -1);
         return TRUE;
     }
