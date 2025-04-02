@@ -26,16 +26,14 @@ headerbar button:active {
     background-color: #3a3a3a;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-switch slider {
-    color: white;
-    border: none;
-}
 #button_equal{
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     border-radius: 5px;
     border: none;
     padding: 10px 0;
+    background-color: #434343;
+    color: white;
     margin: 2px;
     transition: all 0.2s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
@@ -54,6 +52,8 @@ switch slider {
     border-radius: 5px;
     border: none;
     padding: 10px 0;
+    background-color: #434343;
+    color: white;
     margin: 2px;
     transition: all 0.2s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
@@ -72,6 +72,8 @@ switch slider {
     border-radius: 5px;
     border: none;
     padding: 10px 0;
+    background-color: #434343;
+    color: white;
     margin: 2px;
     transition: all 0.2s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
