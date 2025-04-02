@@ -1,42 +1,40 @@
 window {
-    background-color: #f8f8f8;
+    background-color: #2e2e2e;
 }
 headerbar {
-    background-color: #f3f3f3;
-    border-bottom: 0.5px solid #c5c5c5;
-    color: black;
+    background-color: #2e2e2e;
+    border-bottom: 0.5px solid #232323;
+    color: white;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 headerbar button {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     border: none;
-    background-color: #f9f9f9;
-    color: black;
+    background-color: #2e2e2e;
+    color: white;
     border-radius: 4px;
     padding: 5px 5px;
     margin: 0 4px;
     transition: all 0.15s ease;
 }
 headerbar button:hover {
-    background-color: #dcdcdc;
+    background-color: #595959;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 headerbar button:active {
-    background-color: #c3c3c3;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #3a3a3a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 switch slider {
     color: white;
     border: none;
 }
-#button_equal {
+#button_equal{
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     border-radius: 5px;
-    border: 0.5px solid #b3b3b3;
-    background-color: white;
-    color: black;
+    border: none;
     padding: 10px 0;
     margin: 2px;
     transition: all 0.2s ease;
@@ -50,17 +48,15 @@ switch slider {
     background-color: #186e00;
     color: black;
 }
-#button_del {
-     font-size: 15px;
-     font-family: "", serif;
-     border-radius: 5px;
-     border: 0.5px solid #b3b3b3;
-     background-color: white;
-     color: black;
-     padding: 10px 0;
-     margin: 2px;
-     transition: all 0.2s ease;
-     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+#button_del{
+    font-size: 15px;
+    font-family: "", serif;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 0;
+    margin: 2px;
+    transition: all 0.2s ease;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
  }
 #button_del:hover {
     background-color: #DC143C;
@@ -70,57 +66,53 @@ switch slider {
     background-color: #7a0217;
     color: black;
 }
-
 #xn{
     font-size: 16px;
     font-family: "", serif;
     border-radius: 5px;
-    border: 0.5px solid #b3b3b3;
-    background-color: white;
-    color: black;
+    border: none;
     padding: 10px 0;
     margin: 2px;
     transition: all 0.2s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #xn:hover {
-    background-color: #dcdcdc;
+    background-color: #595959;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 #xn:active {
-    background-color: #c3c3c3;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #3a3a3a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 #calc_buttons {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     border-radius: 5px;
-    border: 0.5px solid #b3b3b3;
-    background-color: white;
-    color: black;
+    border: none;
     padding: 10px 0;
+    background-color: #434343;
+    color: white;
     margin: 2px;
     transition: all 0.2s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #calc_buttons:hover {
-    background-color: #dcdcdc;
+    background-color: #595959;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 #calc_buttons:active {
-    background-color: #c3c3c3;
+    background-color: #3a3a3a;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 grid {
-    background-color: #f3f3f3;
+    background-color: #2e2e2e;
 }
 #entry-field {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     padding: 10px;
-    background-color: white;
-    border: 0.5px solid #b3b3b3;
-    color: black;
+    background-color: #434343;
+    color: white;
     border-radius: 5px;
     margin-bottom: 2px;
 }
