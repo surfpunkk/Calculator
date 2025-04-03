@@ -13,7 +13,8 @@ add_executable(calculator main.cpp
         event_handlers.h
         calculator_core.h
         calculator_core.cpp
-        styles.css)
+        styles.css
+        dark_styles.css)
 target_include_directories(calculator PRIVATE ${GTK3_INCLUDE_DIRS}
         ${ICU_INCLUDE_DIRS})
 target_link_libraries(calculator PRIVATE ${GTK3_LIBRARIES}

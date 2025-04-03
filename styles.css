@@ -26,6 +26,10 @@ headerbar button:active {
     background-color: #c3c3c3;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
+headerbar button:focus {
+    border: none;
+    outline: none;
+}
 #button_equal {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
@@ -45,6 +49,11 @@ headerbar button:active {
 #button_equal:active {
     background-color: #186e00;
     color: black;
+}
+#button_equal:focus {
+    border: 0.5px solid #b3b3b3;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #button_del {
      font-size: 15px;
@@ -66,6 +75,11 @@ headerbar button:active {
     background-color: #7a0217;
     color: black;
 }
+#button_del:focus {
+    border: 0.5px solid #b3b3b3;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
 #xn{
     font-size: 16px;
     font-family: "", serif;
@@ -80,11 +94,16 @@ headerbar button:active {
 }
 #xn:hover {
     background-color: #dcdcdc;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #xn:active {
     background-color: #c3c3c3;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+#xn:active:focus {
+    border: 0.5px solid #b3b3b3;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #calc_buttons {
     font-family: "Liberation Mono", serif;
@@ -100,22 +119,32 @@ headerbar button:active {
 }
 #calc_buttons:hover {
     background-color: #dcdcdc;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #calc_buttons:active {
     background-color: #c3c3c3;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+#calc_buttons:focus {
+    border: 0.5px solid #b3b3b3;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 grid {
-    background-color: #f3f3f3;
+    background-color: #e8e8e8;
 }
 #entry-field {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     padding: 10px;
     background-color: white;
-    border: 0.5px solid #b3b3b3;
+    border: 0.5px solid #838383;
     color: black;
     border-radius: 5px;
     margin-bottom: 2px;
+}
+#entry-field:focus {
+    border: 0.5px solid #838383;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }

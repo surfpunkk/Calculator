@@ -20,11 +20,16 @@ headerbar button {
 }
 headerbar button:hover {
     background-color: #595959;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 headerbar button:active {
     background-color: #3a3a3a;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+headerbar button:focus {
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #button_equal{
     font-family: "Liberation Mono", serif;
@@ -46,6 +51,11 @@ headerbar button:active {
     background-color: #186e00;
     color: black;
 }
+#button_equal:focus {
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
 #button_del{
     font-size: 15px;
     font-family: "", serif;
@@ -66,6 +76,11 @@ headerbar button:active {
     background-color: #7a0217;
     color: black;
 }
+#button_del:focus {
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
 #xn{
     font-size: 16px;
     font-family: "", serif;
@@ -80,11 +95,16 @@ headerbar button:active {
 }
 #xn:hover {
     background-color: #595959;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #xn:active {
     background-color: #3a3a3a;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+#xn:focus {
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #calc_buttons {
     font-family: "Liberation Mono", serif;
@@ -100,11 +120,16 @@ headerbar button:active {
 }
 #calc_buttons:hover {
     background-color: #595959;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #calc_buttons:active {
     background-color: #3a3a3a;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+#calc_buttons:focus {
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 grid {
     background-color: #2e2e2e;
@@ -113,8 +138,14 @@ grid {
     font-family: "Liberation Mono", serif;
     font-size: 15px;
     padding: 10px;
+    border: none;
     background-color: #434343;
     color: white;
     border-radius: 5px;
     margin-bottom: 2px;
+}
+#entry-field:focus {
+    border: none;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
