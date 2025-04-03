@@ -73,9 +73,9 @@ void Calculator::toggle_theme() const {
     g_object_unref(provider);
 
     if (dark_theme) {
-        load_css("../dark_styles.css");
+        load_css("../styles/dark_styles.css");
     } else {
-        load_css("../styles.css");
+        load_css("../styles/styles.css");
     }
     gtk_widget_queue_draw(window);
 }
@@ -88,11 +88,11 @@ void Calculator::setup_ui() {
     gtk_window_set_deletable(GTK_WINDOW(window), TRUE);
     gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
     gtk_window_set_modal(GTK_WINDOW(window), FALSE);
-    gtk_window_set_icon_from_file(GTK_WINDOW(window), "../icon.png", nullptr);
+    gtk_window_set_icon_from_file(GTK_WINDOW(window), "../styles/icon.png", nullptr);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), nullptr);
 
     setup_header_bar();
-    load_css("../styles.css");
+    load_css("../styles/styles.css");
 
     grid = gtk_grid_new();
     gtk_container_add(GTK_CONTAINER(window), grid);
