@@ -63,6 +63,20 @@ void Calculator::undo_last_action() {
     }
 }
 
+bool Calculator::is_system_dark_theme() {
+    GtkSettings* settings = gtk_settings_get_default();
+    gchar* theme_name = nullptr;
+    g_object_get(settings, "gtk-theme-name", &theme_name, nullptr);
+
+    const bool is_dark = theme_name && (
+        g_strrstr(theme_name, "dark") ||
+        g_strrstr(theme_name, "Dark") ||
+        g_strrstr(theme_name, "DARK")
+    );
+    g_free(theme_name);
+    return is_dark;
+}
+
 void Calculator::toggle_theme() const {
     GdkScreen *screen = gdk_screen_get_default();
     GtkCssProvider *provider = gtk_css_provider_new();
@@ -71,7 +85,6 @@ void Calculator::toggle_theme() const {
         GTK_STYLE_PROVIDER(provider)
     );
     g_object_unref(provider);
-
     if (dark_theme) {
         load_css("../styles/dark_styles.css");
     } else {
@@ -92,7 +105,9 @@ void Calculator::setup_ui() {
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), nullptr);
 
     setup_header_bar();
-    load_css("../styles/styles.css");
+    dark_theme = is_system_dark_theme();
+    gtk_switch_set_active(GTK_SWITCH(theme_switch), dark_theme);
+    toggle_theme();
 
     grid = gtk_grid_new();
     gtk_container_add(GTK_CONTAINER(window), grid);

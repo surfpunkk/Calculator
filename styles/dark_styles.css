@@ -1,6 +1,26 @@
 window {
     background-color: #2e2e2e;
 }
+switch {
+    background-color: #2e2e2e;
+    border-radius: 20px;
+    padding: 2px;
+    margin: 5px;
+    outline: none;
+    border: none;
+    min-width: 60px;
+    min-height: 20px;
+}
+switch slider {
+    background-color: white;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+switch:disabled {
+    opacity: 0.5;
+}
 headerbar {
     background-color: #2e2e2e;
     border-bottom: 0.5px solid #232323;
