@@ -18,9 +18,6 @@ switch slider {
     min-height: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
-switch:disabled {
-    opacity: 0.5;
-}
 headerbar {
     background-color: #2e2e2e;
     border-bottom: 0.5px solid #232323;
@@ -49,7 +46,6 @@ headerbar button:active {
 headerbar button:focus {
     border: none;
     outline: none;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #button_equal{
     font-family: "Liberation Mono", serif;

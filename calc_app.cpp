@@ -1,7 +1,7 @@
 #include "calc_app.h"
 
-Calculator::Calculator() : window(nullptr), grid(nullptr), entry(nullptr), header_bar(nullptr), undo_button(),
-theme_switch() {}
+Calculator::Calculator() : header_bar(nullptr), undo_button(nullptr), theme_switch(nullptr), history_button(nullptr),
+window(nullptr), grid(nullptr), entry(nullptr) {}
 
 void Calculator::load_css(const char* css_path) {
     GtkCssProvider *provider = gtk_css_provider_new();
@@ -38,10 +38,10 @@ void Calculator::setup_header_bar() {
     gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 
     undo_button = gtk_button_new_with_label("↩");
-    g_signal_connect_swapped(undo_button, "clicked", G_CALLBACK(+[](Calculator* self) {
-        self->undo_last_action();
-    }), this);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), undo_button);
+
+    history_button = gtk_button_new_with_label("⧖");
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar),history_button);
 
     theme_switch = gtk_switch_new();
     g_signal_connect(theme_switch, "state-set", G_CALLBACK(+[](GtkSwitch*, const gboolean state, Calculator* self) {
@@ -50,17 +50,6 @@ void Calculator::setup_header_bar() {
         return FALSE;
     }), this);
     gtk_header_bar_pack_end(GTK_HEADER_BAR(header_bar), theme_switch);
-}
-
-void Calculator::undo_last_action() {
-    if (!history.empty()) {
-        history.pop_back();
-        if (!history.empty()) {
-            gtk_entry_set_text(GTK_ENTRY(entry), history.back().c_str());
-        } else {
-            gtk_entry_set_text(GTK_ENTRY(entry), "");
-        }
-    }
 }
 
 bool Calculator::is_system_dark_theme() {
@@ -94,7 +83,6 @@ void Calculator::toggle_theme() const {
 }
 
 void Calculator::setup_ui() {
-
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size(GTK_WINDOW(window), 300, 400);
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
@@ -139,6 +127,7 @@ void Calculator::setup_ui() {
     }
     gtk_widget_show_all(window);
 }
+
 int Calculator::run(int argc, char *argv[]) {
     gtk_init(&argc, &argv);
     setup_ui();

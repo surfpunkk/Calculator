@@ -9,18 +9,19 @@ public:
     int run(int argc, char *argv[]);
 
 private:
-    GtkWidget *window;
-    GtkWidget *grid;
-    GtkWidget *entry;
     GtkWidget *header_bar;
     GtkWidget *undo_button;
     GtkWidget *theme_switch;
+    GtkWidget *history_button;
     std::vector<std::string> history;
+    GtkWidget *window;
+    GtkWidget *grid;
+    GtkWidget *entry;
+
     bool dark_theme = false;
 
     static void load_css(const char* css_path);
     void setup_header_bar();
-    void undo_last_action();
     static bool is_system_dark_theme();
     void toggle_theme() const;
     void setup_ui();
