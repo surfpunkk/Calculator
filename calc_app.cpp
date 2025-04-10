@@ -138,7 +138,6 @@ int Calculator::run(int argc, char *argv[]) {
 void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
     const char *label = gtk_button_get_label(GTK_BUTTON(widget));
     GtkWidget *entry = GTK_WIDGET(data);
-
     EventHandlers::handle_input(entry, label);
 }
 
@@ -149,6 +148,14 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
         return TRUE;
     } if (event->keyval == GDK_KEY_period || event->keyval == GDK_KEY_KP_Decimal) {
         EventHandlers::handle_input(widget, ",");
+        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
+        return TRUE;
+    }  if (event->keyval == GDK_KEY_asterisk || event->keyval == GDK_KEY_KP_Multiply || (event->keyval == GDK_KEY_8 && event->state & GDK_SHIFT_MASK)) {
+        EventHandlers::handle_input(widget, "×");
+        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
+        return TRUE;
+    } if (event->keyval == GDK_KEY_slash || event->keyval == GDK_KEY_KP_Divide || (event->keyval == GDK_KEY_6 && event->state & GDK_SHIFT_MASK)) {
+        EventHandlers::handle_input(widget, "÷");
         gtk_editable_set_position(GTK_EDITABLE(widget), -1);
         return TRUE;
     }
