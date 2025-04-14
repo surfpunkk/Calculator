@@ -151,33 +151,19 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
             return TRUE;
         }
         return TRUE;
-    } if (event->keyval == GDK_KEY_period || event->keyval == GDK_KEY_KP_Decimal) {
-        EventHandlers::handle_input(widget, ",");
-        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
-        return TRUE;
-    }  if (event->keyval == GDK_KEY_asterisk || event->keyval == GDK_KEY_KP_Multiply || (event->keyval == GDK_KEY_8 && event->state & GDK_SHIFT_MASK)) {
-        EventHandlers::handle_input(widget, "×");
-        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
-        return TRUE;
-    } if (event->keyval == GDK_KEY_slash || event->keyval == GDK_KEY_KP_Divide || (event->keyval == GDK_KEY_6 && event->state & GDK_SHIFT_MASK)) {
-        EventHandlers::handle_input(widget, "÷");
-        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
-        return TRUE;
     }
     switch (event->keyval) {
-        case GDK_KEY_0:
-        case GDK_KEY_1:
-        case GDK_KEY_2:
-        case GDK_KEY_3:
-        case GDK_KEY_4:
-        case GDK_KEY_5:
-        case GDK_KEY_6:
-        case GDK_KEY_7:
-        case GDK_KEY_8:
-        case GDK_KEY_9:
+        case GDK_KEY_0: case GDK_KEY_1: case GDK_KEY_2: case GDK_KEY_3: case GDK_KEY_4:
+        case GDK_KEY_5: case GDK_KEY_6: case GDK_KEY_7: case GDK_KEY_8: case GDK_KEY_9:
             key = gdk_keyval_name(event->keyval);
             break;
         case GDK_KEY_KP_0 ... GDK_KEY_KP_9: key = gdk_keyval_name(event->keyval - GDK_KEY_KP_0 + GDK_KEY_0);
+            break;
+        case GDK_KEY_period: case GDK_KEY_comma: case GDK_KEY_KP_Decimal: key = ",";
+            break;
+        case GDK_KEY_asterisk: case GDK_KEY_KP_Multiply: case GDK_KEY_8 & GDK_SHIFT_MASK: key = "×";
+            break;
+        case GDK_KEY_slash: case GDK_KEY_KP_Divide: key = "÷";
             break;
         case GDK_KEY_plus: case GDK_KEY_KP_Add: key = "+";
             break;
@@ -186,20 +172,32 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
         case GDK_KEY_Escape: case GDK_KEY_Delete: key = "C";
             break;
         case GDK_KEY_BackSpace:
-            key = "⌫";
+            gint start_pos, end_pos;
+        if (gtk_editable_get_selection_bounds(GTK_EDITABLE(widget), &start_pos, &end_pos)) {
+            gtk_editable_delete_selection(GTK_EDITABLE(widget));
+            return TRUE;
+        }
+        key = "⌫";
             break;
-        case GDK_KEY_parenleft: case GDK_KEY_9 & GDK_SHIFT_MASK: key = "(";
+        case GDK_KEY_parenleft: key = "(";
             break;
-        case GDK_KEY_parenright: case GDK_KEY_0 & GDK_SHIFT_MASK: key = ")";
+        case GDK_KEY_parenright: key = ")";
             break;
         case GDK_KEY_asciicircum: case GDK_KEY_dead_circumflex: key = "𝑥ⁿ";
+            break;
+        case GDK_KEY_exclam: key = "𝑥!";
             break;
         case GDK_KEY_percent: key = "%";
             break;
         case GDK_KEY_p: case GDK_KEY_P: key = "π";
             break;
+        default: break;
     }
     if (key != nullptr) {
+        gint start_pos, end_pos;
+        if (gtk_editable_get_selection_bounds(GTK_EDITABLE(widget), &start_pos, &end_pos)) {
+            gtk_editable_delete_selection(GTK_EDITABLE(widget));
+        }
         EventHandlers::handle_input(widget, key);
         gtk_editable_set_position(GTK_EDITABLE(widget), -1);
         return TRUE;
