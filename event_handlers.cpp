@@ -4,23 +4,27 @@
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
-        if (expression != current_text) {
-            expression = current_text;
-        }
-        if (g_strrstr(current_text, "Error:") != nullptr) {
-            no_empty_state = true;
-        }
-        if (g_strcmp0(input, "C") == 0) {
+
+        auto update_expression = [&]() {
+            if (expression != current_text) {
+                expression = current_text;
+            }
+            if (g_strrstr(current_text, "Error:") != nullptr) {
+                no_empty_state = true;
+            }
+        };
+
+        auto handle_clear = [&]() {
             no_empty_state = false;
             result_shown = false;
             expression.clear();
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-        } else if (g_strcmp0(input, "=") == 0) {
+        };
+
+        auto handle_equals = [&]() {
             expression.clear();
             if (current_text[0] != '\0') {
-                if (no_empty_state) {
-                    return;
-                }
+                if (no_empty_state) return;
                 const std::string result = CalculatorCore::calculate(current_text);
                 if (no_empty_state) {
                     gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
@@ -46,42 +50,50 @@
                 gtk_entry_set_text(GTK_ENTRY(entry), "Error: No result");
                 no_empty_state = true;
             }
-        } else if (g_strcmp0(input, "⌫") == 0) {
+        };
+
+        auto handle_backspace = [&]() {
             if (no_empty_state) {
                 expression.clear();
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else if (!expression.empty()) {
-                icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
-                ustr.truncate(ustr.length() - 1);
-                std::string newExpression;
-                ustr.toUTF8String(newExpression);
-                expression = newExpression;
-                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                    icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
+                    ustr.truncate(ustr.length() - 1);
+                    std::string newExpression;
+                    ustr.toUTF8String(newExpression);
+                    expression = newExpression;
+                    gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             }
             result_shown = false;
-        } else if (g_strcmp0(input, "𝑥!") == 0) {
+        };
+
+        auto handle_factorial = [&]() {
             if (no_empty_state) {
                 expression = "!";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else {
-                expression+="!";
+                expression += "!";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = false;
             }
-        } else if (g_strcmp0(input, "𝑥ⁿ") == 0) {
+        };
+
+        auto handle_power = [&]() {
             if (no_empty_state) {
                 expression = "^";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else {
-                expression+="^";
+                expression += "^";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = false;
             }
-        } else {
-            if (result_shown){
+        };
+
+        auto handle_default = [&]() {
+            if (result_shown) {
                 if (isdigit(input[0])) {
                     result_shown = false;
                     expression = input;
@@ -99,5 +111,21 @@
                 expression += input;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             }
+        };
+
+        update_expression();
+
+        if (g_strcmp0(input, "C") == 0) {
+            handle_clear();
+        } else if (g_strcmp0(input, "=") == 0) {
+            handle_equals();
+        } else if (g_strcmp0(input, "⌫") == 0) {
+            handle_backspace();
+        } else if (g_strcmp0(input, "𝑥!") == 0) {
+            handle_factorial();
+        } else if (g_strcmp0(input, "𝑥ⁿ") == 0) {
+            handle_power();
+        } else {
+            handle_default();
         }
     }

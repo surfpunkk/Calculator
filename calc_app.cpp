@@ -143,7 +143,7 @@ void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
 
 gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
     const char *key = nullptr;
-    if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
+    if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter || event-> keyval == GDK_KEY_equal) {
         EventHandlers::handle_input(widget, "=");
         gtk_editable_set_position(GTK_EDITABLE(widget), -1);
         if (no_empty_state) {
@@ -175,6 +175,7 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
             gint start_pos, end_pos;
         if (gtk_editable_get_selection_bounds(GTK_EDITABLE(widget), &start_pos, &end_pos)) {
             gtk_editable_delete_selection(GTK_EDITABLE(widget));
+            result_shown = false;
             return TRUE;
         }
         key = "⌫";
