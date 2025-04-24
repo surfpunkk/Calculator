@@ -192,7 +192,10 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
             break;
         case GDK_KEY_p: case GDK_KEY_P: key = "π";
             break;
-        default: break;
+        default:
+            const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(widget));
+            if (g_strrstr(current_text, "Error:") != nullptr) return TRUE;
+            return FALSE;
     }
     if (key != nullptr) {
         gint start_pos, end_pos;

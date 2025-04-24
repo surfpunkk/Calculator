@@ -4,6 +4,8 @@
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
+        gint start_pos = 0, end_pos = 0;
+        gint cursor_pos = gtk_editable_get_position(GTK_EDITABLE(entry));
 
         auto update_expression = [&]() {
             if (expression != current_text) {
@@ -53,17 +55,21 @@
         };
 
         auto handle_backspace = [&]() {
-            if (no_empty_state) {
+            if (gtk_editable_get_selection_bounds(GTK_EDITABLE(entry), &start_pos, &end_pos)) {
+                gtk_editable_delete_selection(GTK_EDITABLE(entry));
+                expression = gtk_entry_get_text(GTK_ENTRY(entry));
+            } else if (no_empty_state) {
                 expression.clear();
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 no_empty_state = false;
             } else if (!expression.empty()) {
-                    icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
-                    ustr.truncate(ustr.length() - 1);
-                    std::string newExpression;
-                    ustr.toUTF8String(newExpression);
-                    expression = newExpression;
-                    gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
+                if (cursor_pos > 0) ustr.remove(cursor_pos - 1, 1);
+                else ustr.truncate(ustr.length() - 1);
+                std::string newExpression;
+                ustr.toUTF8String(newExpression);
+                expression = newExpression;
+                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             }
             result_shown = false;
         };
