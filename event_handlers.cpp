@@ -1,6 +1,16 @@
 #include "event_handlers.h"
 
     std::string EventHandlers::expression;
+    gint EventHandlers::cursor_pos = 0, EventHandlers::start_pos = 0, EventHandlers::end_pos = 0;
+
+    void EventHandlers::write_history(const std::string &result, const std::string &old_expression) {
+        history_stack.emplace(old_expression);
+        std::string history_item = old_expression + " = " + result;
+        history.push_back(history_item);
+        if (history.size() > 50) {
+            history.erase(history.begin());
+        }
+    }
 
     void EventHandlers::update_expression(GtkEntry *entry) {
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
@@ -21,6 +31,7 @@
 
     void EventHandlers::handle_equals(GtkEntry *entry) {
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
+        std::string old_expression = expression;
         expression.clear();
         if (current_text[0] != '\0') {
             if (no_empty_state) return;
@@ -39,6 +50,7 @@
                         formatted_result.erase(dot_pos);
                     }
                 }
+                write_history(formatted_result, old_expression);
                 expression += formatted_result;
                 if (expression == "inf") expression = "∞";
                 if (expression == "-inf") expression = "-∞";
@@ -52,8 +64,7 @@
     }
 
     void EventHandlers::handle_backspace(GtkEntry *entry) {
-        gint start_pos = 0, end_pos = 0;
-        gint cursor_pos = gtk_editable_get_position(GTK_EDITABLE(entry));
+        cursor_pos = gtk_editable_get_position(GTK_EDITABLE(entry));
         update_expression(entry);
         if (gtk_editable_get_selection_bounds(GTK_EDITABLE(entry), &start_pos, &end_pos)) {
             gtk_editable_delete_selection(GTK_EDITABLE(entry));
@@ -62,7 +73,6 @@
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             no_empty_state = false;
         } else if (!expression.empty()) {
-            g_print("%d", cursor_pos);
             icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
             if (cursor_pos > 0) ustr.remove(cursor_pos - 1, 1);
             else ustr.truncate(ustr.length() - 1);
@@ -70,7 +80,7 @@
             ustr.toUTF8String(newExpression);
             expression = newExpression;
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-            gint new_cursor_pos = cursor_pos > 0 ? cursor_pos - 1 : 0;
+            gint new_cursor_pos = cursor_pos > 0 ? cursor_pos - 1 : -1;
             gtk_editable_set_position(GTK_EDITABLE(entry), new_cursor_pos);
         }
         result_shown = false;

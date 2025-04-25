@@ -4,8 +4,12 @@
 #include <gtk/gtk.h>
 #include "calculator_core.h"
 
+inline std::stack<std::string> history_stack;
+inline std::vector<std::string> history;
+
 class EventHandlers {
 public:
+    static void write_history(const std::string &old_expression, const std::string &result);
     static void handle_clear(GtkEntry *entry);
     static void handle_equals(GtkEntry *entry);
     static void handle_backspace(GtkEntry* entry);
@@ -15,6 +19,7 @@ public:
     static void handle_input(GtkWidget *entry, const char *input);
 private:
     static std::string expression;
+    static gint start_pos, end_pos, cursor_pos;
     static void update_expression(GtkEntry* entry);
 };
 

@@ -38,9 +38,15 @@ void Calculator::setup_header_bar() {
     gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 
     undo_button = gtk_button_new_with_label("↩");
+    g_signal_connect(undo_button, "clicked", G_CALLBACK(+[](GtkButton*, Calculator* self) {
+        self->undo_last_action();
+    }), this);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), undo_button);
 
     history_button = gtk_button_new_with_label("⧖");
+    g_signal_connect(history_button, "clicked", G_CALLBACK(+[](GtkButton*, Calculator* self) {
+        self->show_history();
+    }), this);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar),history_button);
 
     theme_switch = gtk_switch_new();
@@ -50,6 +56,35 @@ void Calculator::setup_header_bar() {
         return FALSE;
     }), this);
     gtk_header_bar_pack_end(GTK_HEADER_BAR(header_bar), theme_switch);
+}
+
+void Calculator::undo_last_action() {
+    if (!history_stack.empty()) {
+        std::string prev_expression = history_stack.top();
+        history_stack.pop();
+        gtk_entry_set_text(GTK_ENTRY(entry), prev_expression.c_str());
+    }
+}
+
+void Calculator::show_history() {
+    GtkWidget* popover = gtk_popover_new(GTK_WIDGET(history_button));
+    gtk_popover_set_position(GTK_POPOVER(popover), GTK_POS_BOTTOM);
+
+    GtkWidget* box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+    gtk_container_add(GTK_CONTAINER(popover), box);
+
+    if (history.empty()) {
+        GtkWidget* label = gtk_label_new("History is empty");
+        gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
+    } else {
+        for (const auto& item : history) {
+            GtkWidget* label = gtk_label_new(item.c_str());
+            gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
+        }
+    }
+
+    gtk_widget_show_all(box);
+    gtk_popover_popup(GTK_POPOVER(popover));
 }
 
 bool Calculator::is_system_dark_theme() {
@@ -144,16 +179,9 @@ void Calculator::on_button_clicked(GtkWidget *widget, gpointer data) {
 gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
     const char *key = nullptr;
     gint start_pos = 0, end_pos = 0;
-    if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter || event-> keyval == GDK_KEY_equal) {
-        EventHandlers::handle_input(widget, "=");
-        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
-        if (no_empty_state) {
-            no_empty_state = false;
-            return TRUE;
-        }
-        return TRUE;
-    }
     switch (event->keyval) {
+        case GDK_KEY_Return: case GDK_KEY_KP_Enter: case GDK_KEY_equal: key = "=";
+            break;
         case GDK_KEY_0: case GDK_KEY_1: case GDK_KEY_2: case GDK_KEY_3: case GDK_KEY_4:
         case GDK_KEY_5: case GDK_KEY_6: case GDK_KEY_7: case GDK_KEY_8: case GDK_KEY_9:
             key = gdk_keyval_name(event->keyval);

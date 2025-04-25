@@ -13,7 +13,6 @@ private:
     GtkWidget *undo_button;
     GtkWidget *theme_switch;
     GtkWidget *history_button;
-    std::vector<std::string> history;
     GtkWidget *window;
     GtkWidget *grid;
     GtkWidget *entry;
@@ -22,6 +21,8 @@ private:
 
     static void load_css(const char* css_path);
     void setup_header_bar();
+    void undo_last_action();
+    void show_history();
     static bool is_system_dark_theme();
     void toggle_theme() const;
     void setup_ui();
