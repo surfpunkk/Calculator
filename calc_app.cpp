@@ -67,24 +67,30 @@ void Calculator::undo_last_action() {
 }
 
 void Calculator::show_history() {
-    GtkWidget* popover = gtk_popover_new(GTK_WIDGET(history_button));
-    gtk_popover_set_position(GTK_POPOVER(popover), GTK_POS_BOTTOM);
-
-    GtkWidget* box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-    gtk_container_add(GTK_CONTAINER(popover), box);
-
+    GtkWidget* menu = gtk_menu_new();
     if (history.empty()) {
-        GtkWidget* label = gtk_label_new("History is empty");
-        gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
+        GtkWidget* menu_item = gtk_menu_item_new_with_label("History is empty");
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        gtk_widget_set_sensitive(menu_item, FALSE);
     } else {
         for (const auto& item : history) {
-            GtkWidget* label = gtk_label_new(item.c_str());
-            gtk_box_pack_start(GTK_BOX(box), label, FALSE, FALSE, 5);
+            GtkWidget* menu_item = gtk_menu_item_new_with_label(item.c_str());
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+            g_signal_connect(menu_item, "activate",
+                             G_CALLBACK(+[](GtkMenuItem* item, gpointer data) {
+                                 auto self = static_cast<Calculator*>(data);
+                                 const gchar* label = gtk_menu_item_get_label(item);
+                                 std::string str_label = label;
+                                 str_label.erase((str_label.find('=') - 1));
+                                 gtk_entry_set_text(GTK_ENTRY(self->entry), str_label.c_str());
+                             }),
+                             this);
         }
     }
-
-    gtk_widget_show_all(box);
-    gtk_popover_popup(GTK_POPOVER(popover));
+    gtk_widget_show_all(menu);
+    gtk_menu_popup_at_widget(GTK_MENU(menu),GTK_WIDGET(history_button),GDK_GRAVITY_SOUTH_WEST,
+                             GDK_GRAVITY_NORTH_WEST,
+                             nullptr);
 }
 
 bool Calculator::is_system_dark_theme() {

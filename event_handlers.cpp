@@ -31,7 +31,14 @@
 
     void EventHandlers::handle_equals(GtkEntry *entry) {
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
-        std::string old_expression = expression;
+        std::string old_expression;
+        if (expression.find(' ') != std::string::npos) {
+            for (char c : expression) {
+                if (c != ' ') {
+                    old_expression += c;
+                }
+            }
+        } else old_expression = expression;
         expression.clear();
         if (current_text[0] != '\0') {
             if (no_empty_state) return;
