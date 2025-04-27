@@ -47,6 +47,23 @@ headerbar button:focus {
     border: none;
     outline: none;
 }
+menu {
+    font-family: "Liberation Mono", serif;
+    font-size: 12px;
+    border: none;
+    background-color: #f3f3f3;
+    color: black;
+    border-radius: 4px;
+    padding: 5px 5px;
+    margin: 0 4px;
+    transition: all 0.15s ease;
+}
+menuitem {
+    color: black;
+}
+menuitem:hover {
+    background-color: #dcdcdc;
+}
 #button_equal {
     font-family: "Liberation Mono", serif;
     font-size: 15px;

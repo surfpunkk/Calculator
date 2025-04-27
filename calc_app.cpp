@@ -87,6 +87,7 @@ void Calculator::show_history() {
                              this);
         }
     }
+    gtk_menu_set_reserve_toggle_size(GTK_MENU(menu), FALSE);
     gtk_widget_show_all(menu);
     gtk_menu_popup_at_widget(GTK_MENU(menu),GTK_WIDGET(history_button),GDK_GRAVITY_SOUTH_WEST,
                              GDK_GRAVITY_NORTH_WEST,
