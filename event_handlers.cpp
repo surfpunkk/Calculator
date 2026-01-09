@@ -3,11 +3,13 @@
     std::string EventHandlers::expression;
     gint EventHandlers::cursor_pos = 0, EventHandlers::start_pos = 0, EventHandlers::end_pos = 0;
 
-    void EventHandlers::write_history(const std::string &result, const std::string &old_expression) {
+    void EventHandlers::write_history(std::string &result, const std::string &old_expression) {
         history_stack.emplace(old_expression);
+        if (result == "inf") result = "∞";
+        if (result == "-inf") result = "-∞";
         std::string history_item = old_expression + " = " + result;
         history.push_back(history_item);
-        if (history.size() > 50) {
+        if (history.size() > 15) {
             history.erase(history.begin());
         }
     }
