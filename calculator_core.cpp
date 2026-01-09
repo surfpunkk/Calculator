@@ -47,7 +47,6 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
     const icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
     std::string currentToken;
     bool expectOperator = false;
-    bool inExponent = false;
 
     for (int32_t i = 0; i < ustr.length(); ++i) {
         const UChar32 c = ustr.char32At(i);
@@ -79,14 +78,17 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.emplace_back(charStr);
                 expectOperator = false;
             }
-        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() && !inExponent &&
-            std::isdigit(currentToken.back())) {
-            currentToken += charStr;
-            inExponent = true;
-        } else if ((charStr == "+" || charStr == "-") && inExponent && (currentToken.back() == 'e'
-            || currentToken.back() == 'E')) {
-            currentToken += charStr;
-            inExponent = false;
+        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() &&
+                std::isdigit(currentToken.back())) {
+                currentToken += charStr;
+        } else if ((charStr == "+" || charStr == "-") && !currentToken.empty() &&
+                (currentToken.back() == 'e' || currentToken.back() == 'E')) {
+                currentToken += charStr;
+        } else if (std::isdigit(c) && !currentToken.empty() &&
+        (currentToken.back() == '+' || currentToken.back() == '-' ||
+        currentToken.back() == 'e' || currentToken.back() == 'E')) {
+                currentToken += charStr;
+                expectOperator = true;
         } else if (charStr == "√" && !expectOperator) {
                 if (!currentToken.empty()) {
                     tokens.push_back(currentToken);
@@ -111,7 +113,6 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 }
                 tokens.emplace_back(charStr);
                 expectOperator = false;
-                inExponent = false;
         } else if (charStr == "(" || charStr == ")") {
             if (!currentToken.empty()) {
                 tokens.push_back(currentToken);
