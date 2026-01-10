@@ -10,6 +10,7 @@ inline std::vector<std::string> history;
 class EventHandlers {
 public:
     static void write_history(std::string &result, const std::string &old_expression);
+    static void insert_at_cursor(GtkEntry *entry, const std::string &input);
     static void handle_clear(GtkEntry *entry);
     static void handle_equals(GtkEntry *entry);
     static void handle_backspace(GtkEntry* entry);

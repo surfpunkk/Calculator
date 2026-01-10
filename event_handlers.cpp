@@ -24,6 +24,25 @@
         }
     }
 
+    void EventHandlers::insert_at_cursor(GtkEntry *entry, const std::string &input) {
+        cursor_pos = gtk_editable_get_position(GTK_EDITABLE(entry));
+        update_expression(entry);
+        icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(expression);
+        if (gtk_editable_get_selection_bounds(GTK_EDITABLE(entry), &start_pos, &end_pos)) {
+            ustr.removeBetween(start_pos, end_pos);
+            cursor_pos = start_pos;
+        }
+        if (cursor_pos < 0 || cursor_pos > ustr.length()) cursor_pos = ustr.length();
+        icu::UnicodeString uinput = icu::UnicodeString::fromUTF8(input);
+        ustr.insert(cursor_pos, uinput);
+        std::string newExpression;
+        ustr.toUTF8String(newExpression);
+        expression = newExpression;
+        gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+        gint new_cursor_pos = cursor_pos + uinput.length();
+        gtk_editable_set_position(GTK_EDITABLE(entry), new_cursor_pos);
+    }
+
     void EventHandlers::handle_clear(GtkEntry *entry){
         no_empty_state = false;
         result_shown = false;
@@ -41,14 +60,14 @@
                 }
             }
         } else old_expression = expression;
-        expression.clear();
-        if (current_text[0] != '\0') {
-            if (no_empty_state) return;
-            const std::string result = CalculatorCore::calculate(current_text);
-            if (no_empty_state) {
-                gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
-                no_empty_state = false;
-            } else {
+            expression.clear();
+            if (current_text[0] != '\0') {
+                if (no_empty_state) return;
+                const std::string result = CalculatorCore::calculate(current_text);
+                if (no_empty_state) {
+                    gtk_entry_set_text(GTK_ENTRY(entry), result.c_str());
+                    no_empty_state = false;
+                } else {
                 gchar result_str[64];
                 g_snprintf(result_str, sizeof(result_str), "%.15g", std::stod(result));
                 std::string formatted_result = result_str;
@@ -65,10 +84,12 @@
                 if (expression == "-inf") expression = "-∞";
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
                 result_shown = true;
+                gtk_editable_set_position(GTK_EDITABLE(entry), -1);
             }
         } else {
             gtk_entry_set_text(GTK_ENTRY(entry), "Error: No result");
             no_empty_state = true;
+            gtk_editable_set_position(GTK_EDITABLE(entry), -1);
         }
     }
 
@@ -100,9 +121,9 @@
             expression = "!";
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             no_empty_state = false;
+            gtk_editable_set_position(GTK_EDITABLE(entry), 1);
         } else {
-            expression += "!";
-            gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            insert_at_cursor(entry, "!");
             result_shown = false;
         }
     }
@@ -112,9 +133,9 @@
             expression = "^";
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             no_empty_state = false;
+            gtk_editable_set_position(GTK_EDITABLE(entry), 1);
         } else {
-            expression += "^";
-            gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+            insert_at_cursor(entry, "^");
             result_shown = false;
         }
     }
@@ -125,19 +146,17 @@
                 result_shown = false;
                 expression = input;
                 gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                gtk_editable_set_position(GTK_EDITABLE(entry), 1);
             } else {
                 result_shown = false;
-                expression += input;
-                gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
+                insert_at_cursor(entry, input);
             }
         } else if (no_empty_state) {
             expression = input;
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
             no_empty_state = false;
-        } else {
-            expression += input;
-            gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-        }
+            gtk_editable_set_position(GTK_EDITABLE(entry), 1);
+        } else insert_at_cursor(entry, input);
     }
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
