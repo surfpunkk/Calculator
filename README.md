@@ -1,6 +1,6 @@
 # GTK3 Calculator
 
-## 🇺🇸 ENG ##
+## `:🇺🇸:` ENG ##
 
 ### About
 
@@ -28,7 +28,7 @@ mkdir build && cmake -B build -G Ninja
 cd build/ && ninja
 ```
 
-## 🇷🇺 RU ##
+## `:🇷🇺:` RU ##
 
 ### О проекте
 
