@@ -63,14 +63,12 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
             continue;
         }
 
-        if (std::isdigit(c) || (charStr == "," && !currentToken.empty() && currentToken.find(',')
-            == std::string::npos)) {
+        if (std::isdigit(c) || (charStr == "," && !currentToken.empty() && currentToken.find(',') == std::string::npos)) {
             currentToken += charStr;
             expectOperator = true;
         } else if (charStr == "-") {
-            if (!expectOperator || (tokens.empty() && currentToken.empty())) {
-                currentToken += charStr;
-            } else {
+            if (!expectOperator || (tokens.empty() && currentToken.empty())) currentToken += charStr;
+            else {
                 if (!currentToken.empty()) {
                     tokens.push_back(currentToken);
                     currentToken.clear();
@@ -78,13 +76,9 @@ std::vector<std::string> CalculatorCore::tokenize(const std::string& expression)
                 tokens.emplace_back(charStr);
                 expectOperator = false;
             }
-        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() &&
-                std::isdigit(currentToken.back())) {
-                currentToken += charStr;
-        } else if ((charStr == "+" || charStr == "-") && !currentToken.empty() &&
-                (currentToken.back() == 'e' || currentToken.back() == 'E')) {
-                currentToken += charStr;
-        } else if (std::isdigit(c) && !currentToken.empty() &&
+        } else if ((charStr == "e" || charStr == "E") && !currentToken.empty() && std::isdigit(currentToken.back())) currentToken += charStr;
+        else if ((charStr == "+" || charStr == "-") && !currentToken.empty() && (currentToken.back() == 'e' || currentToken.back() == 'E')) currentToken += charStr;
+        else if (std::isdigit(c) && !currentToken.empty() &&
         (currentToken.back() == '+' || currentToken.back() == '-' ||
         currentToken.back() == 'e' || currentToken.back() == 'E')) {
                 currentToken += charStr;
@@ -138,18 +132,15 @@ std::vector<std::string> CalculatorCore::infixToRPN(const std::vector<std::strin
     std::vector<std::string> output;
 
     for (const auto& token : tokens) {
-        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) ||
-            token.find(',') != std::string::npos) {
+        if (std::isdigit(token[0]) || (token[0] == '-' && token.size() > 1) || token.find(',') != std::string::npos) {
             output.push_back(token);
-            } else if (isUnaryOperator(token)) {
-                operators.push(token);
-            } else if (isBinaryOperator(token)) {
-                while (!operators.empty() && operators.top() != "(" &&
-                       getPrecedence(operators.top()) >= getPrecedence(token)) {
-                    output.push_back(operators.top());
-                    operators.pop();
-                       }
-                operators.push(token);
+        } else if (isUnaryOperator(token)) operators.push(token);
+        else if (isBinaryOperator(token)) {
+            while (!operators.empty() && operators.top() != "(" && getPrecedence(operators.top()) >= getPrecedence(token)) {
+                output.push_back(operators.top());
+                operators.pop();
+            }
+            operators.push(token);
             } else if (token == "(") {
                 operators.push(token);
             } else if (token == ")") {
