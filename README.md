@@ -1,6 +1,6 @@
 # GTK3 Calculator
 
-## :🇺🇸:ENG ##
+## 🇺🇸 ENG ##
 
 ### About
 
@@ -13,19 +13,22 @@ You can try it by downloading the package from the Release.
 **So you can compile it yourself by cloning the project first:**
 
 ```bash
-git clone https://github.com/surfpunkk/Calculator```
+git clone https://github.com/surfpunkk/Calculator
+```
 
 **Next, you should to make a directory in the cloned project and build app using CMakeList.txt (you must have CMake, GTK3, ICU installed):**
 
 ```bash
-mkdir build && cmake -B build -G Ninja```
+mkdir build && cmake -B build -G Ninja
+```
 
 **Then forward to directory build and run ninja:**
 
 ```bash
-cd build/ && ninja```
+cd build/ && ninja
+```
 
-## :🇷🇺:RU ##
+## 🇷🇺 RU ##
 
 ### О проекте
 
@@ -38,14 +41,17 @@ cd build/ && ninja```
 **Для самостоятельной компиляции сначала клонируйте проект:**
 
 ```bash
-git clone https://github.com/surfpunkk/Calculator```
+git clone https://github.com/surfpunkk/Calculator
+```
 
 **Далее необходимо создать каталог в склонированном проекте и собрать приложение с помощью CMakeList.txt (у вас должны быть установлены CMake, GTK3 и ICU):**
 
 ```bash
-mkdir build && cmake -B build -G Ninja```
+mkdir build && cmake -B build -G Ninja
+```
 
 **Затем перейдите в каталог build и запустите ninja:**
 
 ```bash
-cd build/ && ninja```
+cd build/ && ninja
+```
