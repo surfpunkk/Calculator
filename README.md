@@ -14,7 +14,7 @@ You can try it by downloading the package from the [Release](https://github.com/
 # Linux
 
 > [!CAUTION]
->> For now, the application is only supported on Debian-based systems.
+For now, the application is only supported on Debian-based systems.
 
 **Download the package and install it:**
 
@@ -22,7 +22,7 @@ You can try it by downloading the package from the [Release](https://github.com/
 dpkg -i gtk3-calculator-*.deb
 ```
 
-**Done! You can run it from the terminal with the command:**
+**Done! You can run it from the terminal with the command (Dependencies may need to be installed):**
 
 ```bash
 $ calculator-gtk3
@@ -65,9 +65,9 @@ cd build/ && ninja
 # Linux
 
 > [!CAUTION]
->>На данный момент приложение поддерживается только в Debian-подобных системах.
+На данный момент приложение поддерживается только в Debian-подобных системах.
 
-**Скачайте и установите пакет командой:**
+**Скачайте и установите пакет командой (Может потребоваться установить зависимости):**
 
 ```bash
 dpkg -i gtk3-calculator-*.deb
