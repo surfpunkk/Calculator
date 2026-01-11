@@ -34,7 +34,7 @@ void Calculator::load_css(const char* css_path) {
 void Calculator::setup_header_bar() {
     header_bar = gtk_header_bar_new();
     gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
-    gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), "Калькулятор");
+    gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), "Calculator");
     gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 
     undo_button = gtk_button_new_with_label("↩");
