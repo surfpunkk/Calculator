@@ -9,7 +9,30 @@
 
 Another calculator that no one needed, implemented as part of my personal 1st learning project. It was written in C++ using the GTK3 library.
 
-You can try it by downloading the package from the [Release](https://github.com/surfpunkk/Calculator-GTK3/releases). (A little bit later :) )
+You can try it by downloading the package from the [Release](https://github.com/surfpunkk/Calculator-GTK3/releases).
+
+# Linux
+
+> [!CAUTION]
+>> For now, the application is only supported on Debian-based systems.
+
+**Download the package and install it:**
+
+```bash
+dpkg -i gtk3-calculator-*.deb
+```
+
+**Done! You can run it from the terminal with the command:**
+
+```bash
+$ calculator-gtk3
+```
+
+**Or find the programm in the menu.**
+
+# Windows
+
+**Maybe later :)**
 
 ## Compiling ##
 
@@ -37,7 +60,30 @@ cd build/ && ninja
 
 Ещё один калькулятор, который никому не нужен, реализованный в рамках моего личного первого учебного проекта. Он написан на C++ с использованием библиотеки GTK3.
 
-Вы можете опробовать приложение, скачав пакет из [Release](https://github.com/surfpunkk/Calculator-GTK3/releases). (Чуть-чуть попозже :) )
+Вы можете опробовать приложение, скачав пакет из [Release](https://github.com/surfpunkk/Calculator-GTK3/releases).
+
+# Linux
+
+> [!CAUTION]
+>>На данный момент приложение поддерживается только в Debian-подобных системах.
+
+**Скачайте и установите пакет командой:**
+
+```bash
+dpkg -i gtk3-calculator-*.deb
+```
+
+**Готово! Вы можете запустить приложение из терминала с помощью команды:**
+
+```bash
+$ calculator-gtk3
+```
+
+**Или найдите программу в меню.**
+
+# Windows
+
+**Может быть попозже :)**
 
 ## Компиляция ##
 
