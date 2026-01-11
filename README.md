@@ -11,7 +11,7 @@ Another calculator that no one needed, implemented as part of my personal 1st le
 
 You can try it by downloading the package from the [Release](https://github.com/surfpunkk/Calculator-GTK3/releases).
 
-# Linux
+## Linux ##
 
 > [!CAUTION]
 For now, the application is only supported on Debian-based systems.
@@ -30,7 +30,7 @@ $ calculator-gtk3
 
 **Or find the programm in the menu.**
 
-# Windows
+## Windows ##
 
 **Maybe later :)**
 
@@ -62,7 +62,7 @@ cd build/ && ninja
 
 Вы можете опробовать приложение, скачав пакет из [Release](https://github.com/surfpunkk/Calculator-GTK3/releases).
 
-# Linux
+## Linux ##
 
 > [!CAUTION]
 На данный момент приложение поддерживается только в Debian-подобных системах.
@@ -81,7 +81,7 @@ $ calculator-gtk3
 
 **Или найдите программу в меню.**
 
-# Windows
+## Windows ##
 
 **Может быть попозже :)**
 
