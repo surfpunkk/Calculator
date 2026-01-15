@@ -42,7 +42,7 @@ $ calculator-gtk3
 git clone https://github.com/surfpunkk/Calculator
 ```
 
-**Next, you should to make a directory in the cloned project and build app using CMakeList.txt (you must have CMake, GTK3, ICU installed):**
+**Next, you should to make a directory in the cloned project and build app using CMakeList.txt (you must have CMake (>=3.30), GTK3, ICU, Ninja, pkg-config installed):**
 
 ```bash
 mkdir build && cmake -B build -G Ninja
@@ -93,7 +93,7 @@ $ calculator-gtk3
 git clone https://github.com/surfpunkk/Calculator
 ```
 
-**Далее необходимо создать каталог в склонированном проекте и собрать приложение с помощью CMakeList.txt (у вас должны быть установлены CMake, GTK3 и ICU):**
+**Далее необходимо создать каталог в склонированном проекте и собрать приложение с помощью CMakeList.txt (у вас должны быть установлены CMake (>=3.30), GTK3, ICU, Ninja, pkg-config):**
 
 ```bash
 mkdir build && cmake -B build -G Ninja
