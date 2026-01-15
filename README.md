@@ -16,13 +16,13 @@ You can try it by downloading the package from the [Release](https://github.com/
 > [!CAUTION]
 For now, the application is only supported on Debian-based systems.
 
-**Download the package and install it:**
+**Download the package and install it (Dependencies may need to be installed):**
 
 ```bash
 dpkg -i gtk3-calculator-*.deb
 ```
 
-**Done! You can run it from the terminal with the command (Dependencies may need to be installed):**
+**Done! You can run it from the terminal with the command:**
 
 ```bash
 $ calculator-gtk3
